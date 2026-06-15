@@ -17,21 +17,24 @@
 
     <header class="hero">
         <nav class="navbar">
-            <div class="logo"><i class="fa-solid fa-shield-halved"></i> Pasco Transparente</div>
+            <a href="index.html" class="logo" style="text-decoration:none; color:inherit;">
+                <i class="fa-solid fa-shield-halved"></i> Pasco Transparente
+            </a>
             <ul class="nav-links">
-                <li><a href="#">Observatorio</a></li>
-                <li><a href="#">Proyectos</a></li>
-                <li><a href="#">Noticias</a></li>
-                <li><a href="#">Transparencia</a></li>
+                <li><a href="index.html">Observatorio</a></li>
+                <li><a href="explorar.html">Proyectos</a></li>
+                <li><a href="mapa.html">Mapa Interactivo</a></li>
             </ul>
-            <button class="btn-primary">Consultar Obras</button>
+            <button class="btn-primary" onclick="window.location.href='explorar.html'">Consultar Obras</button>
         </nav>
         
         <div class="hero-content">
             <h1>Observatorio Regional de Pasco</h1>
             <p>Transparencia radical en obras públicas. Transformamos datos regionales complejos en información accesible y confiable para cada ciudadano. Monitoreamos presupuestos, avance físico y aseguramos la integridad institucional en toda la región de Pasco.</p>
             <div class="hero-buttons">
-                <button class="btn-primary"><i class="fa-solid fa-magnifying-glass"></i> Explorar Obras</button>
+                <button class="btn-primary" onclick="window.location.href='explorar.html'">
+                    <i class="fa-solid fa-magnifying-glass"></i> Explorar Obras
+                </button>
                 <button class="btn-outline"><i class="fa-regular fa-file-lines"></i> Ver Informes</button>
             </div>
         </div>
@@ -64,7 +67,7 @@
                     <span>OBRAS TOTALES</span>
                     <i class="fa-solid fa-cubes icon-blue"></i>
                 </div>
-                <h2>3,212</h2>
+                <h2 id="kpi-totales">Cargando...</h2>
                 <small class="text-green"><i class="fa-solid fa-rotate"></i> Datos en tiempo real</small>
             </div>
             <div class="kpi-card">
@@ -72,7 +75,7 @@
                     <span>EN EJECUCIÓN</span>
                     <i class="fa-solid fa-person-digging icon-yellow"></i>
                 </div>
-                <h2>0</h2>
+                <h2 id="kpi-ejecucion">...</h2>
                 <small>0% del total regional</small>
             </div>
             <div class="kpi-card">
@@ -80,7 +83,7 @@
                     <span>CULMINADAS</span>
                     <i class="fa-solid fa-check-double icon-green"></i>
                 </div>
-                <h2>0</h2>
+                <h2 id="kpi-culminadas">...</h2>
                 <small>Fase de cierre o entrega</small>
             </div>
             <div class="kpi-card">
@@ -88,7 +91,7 @@
                     <span>INVERSIÓN TOTAL</span>
                     <i class="fa-solid fa-wallet icon-teal"></i>
                 </div>
-                <h2>S/ 0</h2>
+                <h2 id="kpi-inversion">...</h2>
                 <small>Presupuesto consolidado</small>
             </div>
         </section>
@@ -107,16 +110,16 @@
                     <h3>Obras por Provincia</h3>
                     <div class="progress-container">
                         <div class="progress-bar">
-                            <div class="progress-label"><span>Pasco</span><span>60%</span></div>
-                            <div class="track"><div class="fill bg-blue" style="width: 60%;"></div></div>
+                            <div class="progress-label"><span>Pasco</span><span id="pct-pasco">0%</span></div>
+                            <div class="track"><div id="bar-pasco" class="fill bg-blue" style="width: 0%;"></div></div>
                         </div>
                         <div class="progress-bar">
-                            <div class="progress-label"><span>Daniel Alcides Carrión</span><span>25%</span></div>
-                            <div class="track"><div class="fill bg-purple" style="width: 25%;"></div></div>
+                            <div class="progress-label"><span>Daniel Alcides Carrión</span><span id="pct-dac">0%</span></div>
+                            <div class="track"><div id="bar-dac" class="fill bg-purple" style="width: 0%;"></div></div>
                         </div>
                         <div class="progress-bar">
-                            <div class="progress-label"><span>Oxapampa</span><span>15%</span></div>
-                            <div class="track"><div class="fill bg-yellow" style="width: 15%;"></div></div>
+                            <div class="progress-label"><span>Oxapampa</span><span id="pct-oxa">0%</span></div>
+                            <div class="track"><div id="bar-oxa" class="fill bg-yellow" style="width: 0%;"></div></div>
                         </div>
                     </div>
                 </div>

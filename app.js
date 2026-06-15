@@ -1,171 +1,244 @@
-// ==========================================
-// 1. LÓGICA DEL MAPA Y LOS MARCADORES (LEAFLET)
-// ==========================================
+document.addEventListener('DOMContentLoaded', () => {
 
-// Solo inicializamos el mapa si existe un contenedor con el ID 'mi_mapa'
-const contenedorMapa = document.getElementById('mi_mapa');
-
-if (contenedorMapa) {
-    // Inicializar el mapa centrado en Pasco
-    const mapa = L.map('mi_mapa').setView([-10.6678, -76.2561], 9);
-
-    // Cargar la capa base (OpenStreetMap)
-    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-        attribution: '© OpenStreetMap contributors'
-    }).addTo(mapa);
-
-    // Crear el grupo para agrupar los marcadores (Clustering)
-    const marcadoresAgrupados = L.markerClusterGroup({
-        spiderfyOnMaxZoom: true,
-        showCoverageOnHover: false,
-        zoomToBoundsOnClick: true
-    });
-
-    // Elementos del Modal
-    const modal = document.getElementById("modalObras");
-    const btnCerrar = document.querySelector(".modal-cerrar");
-
-    // Funciones del Modal
-    if (btnCerrar) {
-        btnCerrar.onclick = () => modal.style.display = "none";
-    }
-    window.onclick = function(event) {
-        if (event.target === modal) {
-            modal.style.display = "none";
-        }
-    };
-
-    function formatoMoneda(valor) {
+    // ==========================================
+    // 0. FUNCIONES DE UTILIDAD (A PRUEBA DE FALLOS)
+    // ==========================================
+    
+    // Limpia tildes y mayúsculas para búsquedas exactas
+    const quitarTildes = (str) => str ? str.normalize("NFD").replace(/[\u0300-\u036f]/g, "") : "";
+    
+    // Formatea números a moneda peruana
+    const formatoMoneda = (valor) => {
         if (!valor || isNaN(valor)) return "Datos no disponibles";
         return new Intl.NumberFormat('es-PE', { style: 'currency', currency: 'PEN' }).format(valor);
-    }
+    };
 
-    // Cargar los datos JSON y pintarlos en el mapa
-    async function cargarObras() {
-        try {
-            const respuesta = await fetch('obras_pasco_geolocalizadas.json');
-            const obras = await respuesta.json();
+    // Inyecta texto de forma SEGURA (si el ID no existe en el HTML, no crashea el programa)
+    const setTexto = (id, texto) => {
+        const el = document.getElementById(id);
+        if (el) el.innerText = texto;
+    };
+
+
+    // ==========================================
+    // 1. LÓGICA DEL MAPA Y LOS MARCADORES
+    // ==========================================
+    const contenedorMapa = document.getElementById('mi_mapa');
+    
+    if (contenedorMapa) {
+        const mapa = L.map('mi_mapa').setView([-10.6678, -76.2561], 9);
+
+        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+            attribution: '© OpenStreetMap contributors'
+        }).addTo(mapa);
+
+        const marcadoresAgrupados = L.markerClusterGroup({
+            spiderfyOnMaxZoom: true,
+            showCoverageOnHover: false,
+            zoomToBoundsOnClick: true
+        });
+        mapa.addLayer(marcadoresAgrupados);
+
+        const modal = document.getElementById("modalObras");
+        const btnCerrar = document.querySelector(".modal-cerrar");
+
+        if (btnCerrar && modal) {
+            btnCerrar.onclick = () => modal.style.display = "none";
+            window.onclick = (event) => { if (event.target === modal) modal.style.display = "none"; };
+        }
+
+        let todasLasObrasMapa = [];
+
+        // Diseño de pines
+        const crearIconoHtml = (color) => L.divIcon({
+            className: "custom-pin",
+            html: `<div style="background-color:${color}; width:18px; height:18px; border-radius:50%; border:2px solid white; box-shadow:0 0 5px rgba(0,0,0,0.5); pointer-events:none;"></div>`,
+            iconSize: [18, 18],
+            iconAnchor: [9, 9]
+        });
+        
+        const iconVerde = crearIconoHtml('#16a34a');
+        const iconRojo = crearIconoHtml('#dc2626');
+        const iconAzul = crearIconoHtml('#0284c7');
+
+        // Función que dibuja el mapa (Usada al inicio y por los filtros)
+        function renderizarMapa(obras) {
+            marcadoresAgrupados.clearLayers(); 
 
             obras.forEach(obra => {
                 if (obra.Latitud && obra.Longitud) {
-                    const marcador = L.marker([obra.Latitud, obra.Longitud]);
+                    const estado = (obra['Estado de ejecución'] || "").toLowerCase();
+                    let iconoActual = iconAzul;
+                    if (estado.includes('paralizada')) iconoActual = iconRojo;
+                    else if (estado.includes('ejecución') || estado.includes('ejecucion')) iconoActual = iconVerde;
 
-                    // Evento al hacer clic en el marcador
+                    const marcador = L.marker([obra.Latitud, obra.Longitud], { icon: iconoActual });
+
+                    // Evento Click MEGA-SEGURO
                     marcador.on('click', function() {
-                        document.getElementById("modal-titulo").innerText = obra['Nombre de obra'] || "Obra sin nombre";
-                        document.getElementById("modal-entidad").innerText = obra['Entidad Pública'] || "Entidad no registrada";
-                        document.getElementById("modal-estado").innerText = obra['Estado de ejecución'] || "Desconocido";
+                        if(!modal) return; // Si no hay modal en el HTML, no hace nada
                         
-                        document.getElementById("modal-avance").innerText = (obra['Avance Físico Real Acumulado (%)'] || 0) + "%";
-                        document.getElementById("modal-monto").innerText = formatoMoneda(obra['Monto de ejecución financiera de la obra']);
+                        setTexto("modal-titulo", obra['Nombre de obra'] || "Obra sin nombre");
+                        setTexto("modal-entidad", obra['Entidad Pública'] || "Entidad no registrada");
+                        setTexto("modal-estado", obra['Estado de ejecución'] || "Desconocido");
+                        setTexto("modal-avance", (obra['Avance Físico Real Acumulado (%)'] || 0) + "%");
+                        setTexto("modal-monto", formatoMoneda(obra['Monto de ejecución financiera de la obra']));
+                        setTexto("modal-ubicacion", `${obra['Distrito']}, ${obra['Provincia']}`);
                         
-                        document.getElementById("modal-ubicacion").innerText = `${obra['Distrito']}, ${obra['Provincia']}`;
-                        document.getElementById("modal-snip").innerText = obra['Código SNIP'] || "N/A";
+                        const codigoSnip = (obra['Código SNIP'] || '').toString().trim();
+                        setTexto("modal-snip", codigoSnip || "N/A");
 
-                        // Colores de la etiqueta de estado
-                        const estadoElem = document.getElementById("modal-estado");
-                        const estadoTexto = (obra['Estado de ejecución'] || "").toLowerCase();
-                        
-                        if (estadoTexto.includes("paralizada")) {
-                            estadoElem.style.backgroundColor = "#fee2e2"; 
-                            estadoElem.style.color = "#dc2626";         
-                        } else if (estadoTexto.includes("ejecución")) {
-                            estadoElem.style.backgroundColor = "#dcfce7"; 
-                            estadoElem.style.color = "#16a34a";
-                        } else {
-                            estadoElem.style.backgroundColor = "#e0f2fe"; 
-                            estadoElem.style.color = "#0284c7";
+                        const btnEnlace = document.getElementById("modal-enlace-mef");
+                        if (btnEnlace) {
+                            if (codigoSnip) {
+                                btnEnlace.href = `detalle_obra.html?snip=${codigoSnip}`;
+                                btnEnlace.style.pointerEvents = 'auto';
+                                btnEnlace.style.opacity = '1';
+                                btnEnlace.innerHTML = '<i class="fa-solid fa-arrow-up-right-from-square"></i> Ver ficha detallada';
+                            } else {
+                                btnEnlace.href = '#';
+                                btnEnlace.style.pointerEvents = 'none';
+                                btnEnlace.style.opacity = '0.5';
+                                btnEnlace.innerText = 'Sin código SNIP';
+                            }
                         }
 
-                        modal.style.display = "flex";
+                        const estadoElem = document.getElementById("modal-estado");
+                        if (estadoElem) {
+                            if (estado.includes("paralizada")) {
+                                estadoElem.style.backgroundColor = "#fee2e2"; estadoElem.style.color = "#dc2626";         
+                            } else if (estado.includes("ejecución") || estado.includes("ejecucion")) {
+                                estadoElem.style.backgroundColor = "#dcfce7"; estadoElem.style.color = "#16a34a";
+                            } else {
+                                estadoElem.style.backgroundColor = "#e0f2fe"; estadoElem.style.color = "#0284c7";
+                            }
+                        }
+
+                        modal.style.display = "flex"; // ¡Abre el modal!
                     });
                     
                     marcadoresAgrupados.addLayer(marcador);
                 }
             });
-
-            mapa.addLayer(marcadoresAgrupados);
-            console.log(`¡Se cargaron ${obras.length} obras en el mapa!`);
-
-        } catch (error) {
-            console.error("Error al cargar el archivo JSON:", error);
         }
+
+        // Lógica de Filtros en mapa.html
+        const btnFiltrarMapa = document.getElementById('btnFiltrar');
+        if (btnFiltrarMapa) {
+            btnFiltrarMapa.addEventListener('click', () => {
+                const elTxt = document.getElementById('buscarTexto');
+                const elProv = document.getElementById('filtroProvincia');
+                const elEst = document.getElementById('filtroEstado');
+
+                const txtBusqueda = elTxt ? quitarTildes(elTxt.value.toLowerCase().trim()) : "";
+                const valProvincia = elProv ? elProv.value : "todas";
+                const valEstado = elEst ? quitarTildes(elEst.value.toLowerCase()) : "todos";
+
+                const obrasFiltradas = todasLasObrasMapa.filter(obra => {
+                    const textoObra = quitarTildes(`${obra['Nombre de obra']||''} ${obra['Código SNIP']||''}`.toLowerCase());
+                    const pasaTxt = txtBusqueda === "" || textoObra.includes(txtBusqueda);
+
+                    const provObra = (obra['Provincia'] || "").trim().toUpperCase();
+                    const pasaProv = (valProvincia === 'todas') || provObra.includes(valProvincia);
+
+                    const estObra = quitarTildes((obra['Estado de ejecución'] || "").toLowerCase());
+                    let pasaEst = true;
+                    if (valEstado !== 'todos') pasaEst = estObra.includes(valEstado);
+
+                    return pasaTxt && pasaProv && pasaEst;
+                });
+
+                renderizarMapa(obrasFiltradas);
+            });
+        }
+
+        // Carga inicial
+        fetch('obras_pasco_geolocalizadas.json')
+            .then(res => res.json())
+            .then(obras => {
+                todasLasObrasMapa = obras;
+                
+                // Llenar KPIs del index.html si existen
+                const kpiTotales = document.getElementById('kpi-totales');
+                if (kpiTotales) {
+                    let ejecucion = 0; let culminadas = 0; let inversionTotal = 0;
+                    let provPasco = 0; let provDAC = 0; let provOxa = 0;
+
+                    todasLasObrasMapa.forEach(obra => {
+                        const estado = (obra['Estado de ejecución'] || "").toLowerCase();
+                        if (estado.includes('ejecución') || estado.includes('ejecucion')) ejecucion++;
+                        if (estado.includes('terminada') || estado.includes('recepción') || estado.includes('liquidada') || estado.includes('concluida') || estado.includes('finalizado') || estado.includes('finalizada')) culminadas++;
+                        
+                        inversionTotal += (parseFloat(obra['Monto de ejecución financiera de la obra']) || 0);
+
+                        const provincia = (obra['Provincia'] || "").toUpperCase();
+                        if (provincia === 'PASCO') provPasco++;
+                        else if (provincia.includes('DANIEL ALCIDES')) provDAC++;
+                        else if (provincia === 'OXAPAMPA') provOxa++;
+                    });
+
+                    const totalObras = todasLasObrasMapa.length;
+                    setTexto('kpi-totales', totalObras.toLocaleString('es-PE'));
+                    setTexto('kpi-ejecucion', ejecucion.toLocaleString('es-PE'));
+                    setTexto('kpi-culminadas', culminadas.toLocaleString('es-PE'));
+                    setTexto('kpi-inversion', `S/ ${(inversionTotal / 1000000).toFixed(2)} M`);
+
+                    const pctPasco = totalObras > 0 ? Math.round((provPasco / totalObras) * 100) : 0;
+                    const pctDAC = totalObras > 0 ? Math.round((provDAC / totalObras) * 100) : 0;
+                    const pctOxa = totalObras > 0 ? Math.round((provOxa / totalObras) * 100) : 0;
+
+                    setTexto('pct-pasco', pctPasco + '%'); 
+                    const barPasco = document.getElementById('bar-pasco'); if(barPasco) barPasco.style.width = pctPasco + '%';
+                    
+                    setTexto('pct-dac', pctDAC + '%'); 
+                    const barDac = document.getElementById('bar-dac'); if(barDac) barDac.style.width = pctDAC + '%';
+                    
+                    setTexto('pct-oxa', pctOxa + '%'); 
+                    const barOxa = document.getElementById('bar-oxa'); if(barOxa) barOxa.style.width = pctOxa + '%';
+                }
+
+                renderizarMapa(todasLasObrasMapa);
+            })
+            .catch(err => console.error("Error cargando JSON del Mapa:", err));
     }
 
-    cargarObras();
-}
 
-// ==========================================
-// 2. LÓGICA DEL GRÁFICO CIRCULAR (CHART.JS)
-// ==========================================
-
-document.addEventListener('DOMContentLoaded', function() {
+    // ==========================================
+    // 2. LÓGICA DEL GRÁFICO CIRCULAR
+    // ==========================================
     const canvasGrafico = document.getElementById('donutChart');
-    
-    // Solo ejecutamos Chart.js si el canvas existe (es decir, estamos en el index.html / Dashboard)
     if (canvasGrafico) {
         const ctx = canvasGrafico.getContext('2d');
-        
         new Chart(ctx, {
             type: 'doughnut',
-            data: {
-                labels: ['Devengado', 'Por Ejecutar'],
-                datasets: [{
-                    data: [68, 32], 
-                    backgroundColor: ['#10b981', '#f3f4f6'],
-                    borderWidth: 0,
-                    cutout: '75%' 
-                }]
-            },
-            options: {
-                responsive: true,
-                maintainAspectRatio: false,
-                plugins: {
-                    legend: { display: false }, 
-                    tooltip: { enabled: true }
-                }
-            },
+            data: { labels: ['Devengado', 'Por Ejecutar'], datasets: [{ data: [68, 32], backgroundColor: ['#10b981', '#f3f4f6'], borderWidth: 0, cutout: '75%' }] },
+            options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { display: false }, tooltip: { enabled: true } } },
             plugins: [{
                 id: 'textCenter',
                 beforeDraw: function(chart) {
                     var width = chart.width, height = chart.height, ctx = chart.ctx;
                     ctx.restore();
-                    var fontSize = (height / 114).toFixed(2);
-                    ctx.font = "bold " + fontSize + "em sans-serif";
-                    ctx.textBaseline = "middle";
-                    ctx.fillStyle = "#333";
-
-                    var text = "68%",
-                        textX = Math.round((width - ctx.measureText(text).width) / 2),
-                        textY = height / 2 - 5;
-
+                    ctx.font = "bold " + (height / 114).toFixed(2) + "em sans-serif";
+                    ctx.textBaseline = "middle"; ctx.fillStyle = "#333";
+                    var text = "68%", textX = Math.round((width - ctx.measureText(text).width) / 2), textY = height / 2 - 5;
                     ctx.fillText(text, textX, textY);
-                    
-                    ctx.font = "normal 0.5em sans-serif";
-                    ctx.fillStyle = "#888";
-                    var text2 = "Devengado",
-                        text2X = Math.round((width - ctx.measureText(text2).width) / 2),
-                        text2Y = height / 2 + 15;
+                    ctx.font = "normal 0.5em sans-serif"; ctx.fillStyle = "#888";
+                    var text2 = "Devengado", text2X = Math.round((width - ctx.measureText(text2).width) / 2), text2Y = height / 2 + 15;
                     ctx.fillText(text2, text2X, text2Y);
                     ctx.save();
                 }
             }]
         });
     }
-});
 
-// ==========================================
-// 3. LÓGICA DE EXPLORACIÓN Y FILTROS (EXPLORAR.HTML)
-// ==========================================
 
-document.addEventListener('DOMContentLoaded', function() {
+    // ==========================================
+    // 3. LÓGICA DE EXPLORACIÓN Y FILTROS (explorar.html)
+    // ==========================================
     const contenedorObras = document.getElementById('contenedorObras');
-    
-    // Solo ejecutamos esto si estamos en la página explorar.html
     if (contenedorObras) {
-        let todasLasObras = []; // Aquí guardaremos todas las obras en memoria
+        let todasLasObrasExplorar = [];
 
-        // Elementos del DOM (Filtros)
         const inputTexto = document.getElementById('filtroTexto');
         const selectProv = document.getElementById('filtroProv');
         const selectEstado = document.getElementById('filtroEstadoObra');
@@ -174,91 +247,48 @@ document.addEventListener('DOMContentLoaded', function() {
         const btnLimpiar = document.getElementById('btnLimpiarFiltros');
         const contador = document.getElementById('contadorResultados');
 
-        // Función para formatear moneda
-        const formatoSoles = (valor) => {
-            if (!valor || isNaN(valor)) return "S/ 0.00";
-            return new Intl.NumberFormat('es-PE', { style: 'currency', currency: 'PEN' }).format(valor);
-        };
+        function filtrarYRenderizarExplorar() {
+            const textoBusqueda = inputTexto ? quitarTildes(inputTexto.value.toLowerCase().trim()) : "";
+            const provincia = selectProv ? selectProv.value : "todas";
+            const estadoBusqueda = selectEstado ? quitarTildes(selectEstado.value.toLowerCase()) : "todos";
+            const avanceMinimo = rangeAvance ? parseInt(rangeAvance.value) : 0;
 
-        // 1. Cargar datos del JSON
-        async function cargarDatosParaExplorar() {
-            try {
-                const respuesta = await fetch('obras_pasco_geolocalizadas.json');
-                todasLasObras = await respuesta.json();
-                filtrarYRenderizar(); // Pintar por primera vez
-            } catch (error) {
-                contador.innerText = "Error al cargar las obras.";
-                console.error(error);
-            }
-        }
+            const obrasFiltradas = todasLasObrasExplorar.filter(obra => {
+                const textoObra = quitarTildes(`${obra['Nombre de obra']||''} ${obra['Entidad Pública']||''} ${obra['Código SNIP']||''}`.toLowerCase());
+                const pasaTexto = textoBusqueda === "" || textoObra.includes(textoBusqueda);
 
-        // 2. Lógica del motor de filtrado
-        function filtrarYRenderizar() {
-            const textoBusqueda = inputTexto.value.toLowerCase();
-            const provincia = selectProv.value;
-            const estadoBusqueda = selectEstado.value.toLowerCase();
-            const avanceMinimo = parseInt(rangeAvance.value);
+                const provObra = (obra['Provincia'] || "").trim().toUpperCase();
+                const pasaProv = (provincia === 'todas') || provObra.includes(provincia);
 
-            // Filtrar el array en memoria
-            const obrasFiltradas = todasLasObras.filter(obra => {
-                // Filtro de Texto (Busca en Nombre, Entidad o SNIP)
-                const textoObra = `${obra['Nombre de obra']} ${obra['Entidad Pública']} ${obra['Código SNIP']}`.toLowerCase();
-                const pasaTexto = textoObra.includes(textoBusqueda);
-
-                // Filtro Provincia
-                const pasaProv = (provincia === 'todas') || (obra['Provincia'] && obra['Provincia'].toUpperCase() === provincia);
-
-                // Filtro Estado
-                const estadoObraActual = (obra['Estado de ejecución'] || "").toLowerCase();
+                const estadoObraActual = quitarTildes((obra['Estado de ejecución'] || "").toLowerCase());
                 let pasaEstado = true;
-                if (estadoBusqueda !== 'todos') {
-                    pasaEstado = estadoObraActual.includes(estadoBusqueda);
-                }
+                if (estadoBusqueda !== 'todos') pasaEstado = estadoObraActual.includes(estadoBusqueda);
 
-                // Filtro Avance Físico
-                const avanceActual = parseFloat(obra['Avance Físico Real Acumulado (%)']) || 0;
-                const pasaAvance = avanceActual >= avanceMinimo;
+                const avanceStr = (obra['Avance Físico Real Acumulado (%)'] || "0").toString().replace(',', '.');
+                const pasaAvance = (parseFloat(avanceStr) || 0) >= avanceMinimo;
 
                 return pasaTexto && pasaProv && pasaEstado && pasaAvance;
             });
 
-            // Actualizar el contador
-            contador.innerText = `Mostrando ${Math.min(obrasFiltradas.length, 50)} de ${obrasFiltradas.length} resultados encontrados`;
-
-            // 3. Renderizar las tarjetas (Limitamos a 50 para no congelar el navegador)
-            renderizarTarjetas(obrasFiltradas.slice(0, 50));
-        }
-
-        // 4. Dibujar el HTML de cada tarjeta
-        // 4. Dibujar el HTML de cada tarjeta
-        function renderizarTarjetas(obras) {
-            contenedorObras.innerHTML = ''; // Limpiar el contenedor
-
-            if (obras.length === 0) {
+            if(contador) contador.innerText = `Mostrando ${Math.min(obrasFiltradas.length, 50)} de ${obrasFiltradas.length} resultados encontrados`;
+            
+            contenedorObras.innerHTML = '';
+            if (obrasFiltradas.length === 0) {
                 contenedorObras.innerHTML = '<p style="grid-column: 1/-1; text-align:center; color:#777;">No se encontraron obras con estos filtros.</p>';
                 return;
             }
 
-            obras.forEach(obra => {
+            obrasFiltradas.slice(0, 50).forEach(obra => {
                 const estado = obra['Estado de ejecución'] || "Desconocido";
                 const avance = obra['Avance Físico Real Acumulado (%)'] || 0;
-                
-                // Extraemos el código SNIP limpio (sin espacios)
                 const codigoSnip = (obra['Código SNIP'] || '').toString().trim();
-                
-                // Construimos el enlace dinámico al SSI del MEF
-                // Ahora enviamos al usuario a nuestra propia página, pasándole el SNIP por la URL
                 const enlaceSSI = codigoSnip ? `detalle_obra.html?snip=${codigoSnip}` : '#';
-                
-                // Si por alguna razón la obra no tiene SNIP, deshabilitamos el botón para evitar errores
                 const estiloBotonExtra = codigoSnip ? '' : 'pointer-events: none; opacity: 0.5; cursor: not-allowed;';
                 const textoBoton = codigoSnip ? '<i class="fa-solid fa-arrow-up-right-from-square"></i> Ver ficha detallada' : 'Sin código SNIP';
 
-                // Definir colores según estado
-                let colorEstado = '#0284c7'; // Azul
-                let bgEstado = '#e0f2fe';
+                let colorEstado = '#0284c7'; let bgEstado = '#e0f2fe';
                 if(estado.toLowerCase().includes('paralizada')) { colorEstado = '#dc2626'; bgEstado = '#fee2e2'; }
-                if(estado.toLowerCase().includes('ejecución')) { colorEstado = '#16a34a'; bgEstado = '#dcfce7'; }
+                if(estado.toLowerCase().includes('ejecución') || estado.toLowerCase().includes('ejecucion')) { colorEstado = '#16a34a'; bgEstado = '#dcfce7'; }
 
                 const tarjeta = document.createElement('div');
                 tarjeta.className = 'obra-card';
@@ -270,17 +300,14 @@ document.addEventListener('DOMContentLoaded', function() {
                     <h4 class="obra-card-titulo">${obra['Nombre de obra'] || 'Sin nombre'}</h4>
                     <div class="obra-card-entidad"><i class="fa-solid fa-building-columns"></i> ${obra['Entidad Pública'] || '-'}</div>
                     <div class="obra-card-ubicacion"><i class="fa-solid fa-location-dot"></i> ${obra['Distrito']}, ${obra['Provincia']}</div>
-                    
                     <div class="obra-card-footer">
                         <div style="display:flex; justify-content:space-between; margin-bottom:5px; font-size:0.85rem;">
-                            <span>Avance Físico:</span>
-                            <strong>${avance}%</strong>
+                            <span>Avance Físico:</span><strong>${avance}%</strong>
                         </div>
                         <div class="track" style="margin-bottom:15px; height:6px;">
                             <div class="fill" style="width: ${Math.min(avance, 100)}%; background-color: ${avance >= 80 ? '#16a34a' : (avance < 30 ? '#dc2626' : '#eab308')};"></div>
                         </div>
-                        
-                        <a href="${enlaceSSI}" target="_blank" class="btn-primary" style="display: block; text-align: center; width: 100%; text-decoration: none; font-size: 0.9rem; padding: 10px 0; border-radius: 6px; transition: 0.2s; ${estiloBotonExtra}">
+                        <a href="${enlaceSSI}" class="btn-primary" style="display: block; text-align: center; width: 100%; text-decoration: none; font-size: 0.9rem; padding: 10px 0; border-radius: 6px; transition: 0.2s; ${estiloBotonExtra}">
                             ${textoBoton}
                         </a>
                     </div>
@@ -289,26 +316,31 @@ document.addEventListener('DOMContentLoaded', function() {
             });
         }
 
-        // 5. Escuchar eventos de los filtros en tiempo real
-        inputTexto.addEventListener('input', filtrarYRenderizar);
-        selectProv.addEventListener('change', filtrarYRenderizar);
-        selectEstado.addEventListener('change', filtrarYRenderizar);
-        
-        rangeAvance.addEventListener('input', function() {
-            labelAvance.innerText = `${this.value}%`;
-            filtrarYRenderizar();
-        });
+        if (inputTexto) inputTexto.addEventListener('input', filtrarYRenderizarExplorar);
+        if (selectProv) selectProv.addEventListener('change', filtrarYRenderizarExplorar);
+        if (selectEstado) selectEstado.addEventListener('change', filtrarYRenderizarExplorar);
+        if (rangeAvance) {
+            rangeAvance.addEventListener('input', function() {
+                if(labelAvance) labelAvance.innerText = `${this.value}%`;
+                filtrarYRenderizarExplorar();
+            });
+        }
+        if (btnLimpiar) {
+            btnLimpiar.addEventListener('click', () => {
+                if(inputTexto) inputTexto.value = '';
+                if(selectProv) selectProv.value = 'todas';
+                if(selectEstado) selectEstado.value = 'todos';
+                if(rangeAvance) { rangeAvance.value = '0'; if(labelAvance) labelAvance.innerText = '0%'; }
+                filtrarYRenderizarExplorar();
+            });
+        }
 
-        btnLimpiar.addEventListener('click', () => {
-            inputTexto.value = '';
-            selectProv.value = 'todas';
-            selectEstado.value = 'todos';
-            rangeAvance.value = '0';
-            labelAvance.innerText = '0%';
-            filtrarYRenderizar();
-        });
-
-        // Iniciar todo
-        cargarDatosParaExplorar();
+        fetch('obras_pasco_geolocalizadas.json')
+            .then(res => res.json())
+            .then(obras => {
+                todasLasObrasExplorar = obras;
+                filtrarYRenderizarExplorar();
+            })
+            .catch(err => console.error("Error cargando JSON de Explorar:", err));
     }
 });
