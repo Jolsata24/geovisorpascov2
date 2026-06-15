@@ -1,0 +1,201 @@
+/* ==========================================
+   1. VARIABLES Y RESET BÁSICO
+   ========================================== */
+:root {
+    --primary: #007bb5;
+    --primary-dark: #005a87;
+    --text-main: #333333;
+    --text-muted: #777777;
+    --white: #ffffff;
+}
+
+* {
+    box-sizing: border-box;
+    font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+}
+
+/* ==========================================
+   2. CONTENEDOR DEL MAPA (FULL SCREEN)
+   ========================================== */
+.mapa-fullscreen-body {
+    margin: 0;
+    padding: 0;
+    overflow: hidden; /* Evita que aparezcan barras de scroll lateral o vertical */
+    background-color: #e9ecef;
+}
+
+.mapa-fullscreen {
+    height: 100vh; /* 100% del alto de la pantalla */
+    width: 100vw;  /* 100% del ancho de la pantalla */
+    z-index: 1;    /* El mapa va al fondo */
+}
+
+/* Evitar bordes extraños en los iconos personalizados de Leaflet */
+.custom-pin {
+    background: transparent;
+    border: none;
+}
+
+/* ==========================================
+   3. BOTÓN FLOTANTE "VOLVER"
+   ========================================== */
+.btn-volver {
+    position: absolute;
+    top: 20px;
+    left: 20px;
+    z-index: 1000; /* Por encima del mapa */
+    background-color: var(--white);
+    color: var(--text-main);
+    padding: 10px 20px;
+    border-radius: 8px;
+    text-decoration: none;
+    font-weight: bold;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.15);
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    transition: all 0.2s;
+}
+
+.btn-volver:hover {
+    background-color: var(--primary);
+    color: var(--white);
+}
+
+/* ==========================================
+   4. PANEL DE FILTROS FLOTANTE (GLASSMORPHISM)
+   ========================================== */
+.panel-filtros {
+    position: absolute;
+    top: 80px;
+    left: 20px;
+    z-index: 1000;
+    background-color: rgba(255, 255, 255, 0.95);
+    backdrop-filter: blur(8px); /* Efecto cristal */
+    width: 320px;
+    padding: 20px;
+    border-radius: 12px;
+    box-shadow: 0 5px 25px rgba(0,0,0,0.2);
+    border-top: 4px solid var(--primary);
+}
+
+.panel-filtros h3 {
+    margin-top: 0;
+    margin-bottom: 20px;
+    color: var(--primary-dark);
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-size: 1.1rem;
+}
+
+.grupo-filtro {
+    margin-bottom: 15px;
+}
+
+.grupo-filtro label {
+    display: block;
+    font-size: 0.85rem;
+    color: var(--text-muted);
+    margin-bottom: 5px;
+    font-weight: 600;
+}
+
+.grupo-filtro input, 
+.grupo-filtro select {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #ddd;
+    border-radius: 6px;
+    font-size: 0.9rem;
+    outline: none;
+    transition: border-color 0.2s;
+    background-color: #f8fafc;
+}
+
+.grupo-filtro input:focus, 
+.grupo-filtro select:focus {
+    border-color: var(--primary);
+    background-color: #fff;
+}
+
+.btn-primary {
+    background: var(--primary);
+    color: white;
+    padding: 10px 24px;
+    border-radius: 6px;
+    cursor: pointer;
+    font-weight: 600;
+    border: none;
+    text-decoration: none;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    transition: all 0.2s;
+}
+
+.btn-primary:hover {
+    background: var(--primary-dark);
+}
+
+/* ==========================================
+   5. VENTANA MODAL (SOBRE EL MAPA)
+   ========================================== */
+.modal-overlay {
+    display: none; 
+    position: fixed !important;
+    z-index: 999999 !important; /* Blindaje para que Leaflet no lo tape */
+    left: 0; 
+    top: 0; 
+    width: 100%; 
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.6);
+    backdrop-filter: blur(3px);
+    align-items: center; 
+    justify-content: center;
+}
+
+.modal-contenido {
+    background-color: #ffffff;
+    border-radius: 12px;
+    padding: 24px;
+    width: 90%;
+    max-width: 500px;
+    box-shadow: 0 10px 40px rgba(0,0,0,0.3);
+    position: relative;
+    animation: aparecer 0.3s ease-out;
+}
+
+@keyframes aparecer {
+    from { transform: translateY(20px); opacity: 0; }
+    to { transform: translateY(0); opacity: 1; }
+}
+
+.modal-cerrar {
+    position: absolute;
+    top: 15px;
+    right: 20px;
+    color: #888;
+    font-size: 28px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: color 0.2s;
+    line-height: 1;
+}
+
+.modal-cerrar:hover {
+    color: #dc2626;
+}
+
+/* Textos del Modal */
+.texto-principal { color: #1e293b; font-size: 1.2rem; margin: 10px 0 5px 0; line-height: 1.4; }
+.texto-secundario { color: #64748b; font-size: 0.9rem; margin-top: 0; border-bottom: 1px solid #f1f5f9; padding-bottom: 15px; }
+.etiqueta-estado { display: inline-block; padding: 4px 10px; border-radius: 20px; font-size: 0.8rem; font-weight: 600; text-transform: uppercase; background-color: #e0f2fe; color: #0284c7; }
+
+/* Grid de Datos del Modal */
+.modal-cuerpo { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-top: 15px; }
+.dato-bloque { display: flex; flex-direction: column; }
+.dato-etiqueta { font-size: 0.75rem; color: #94a3b8; text-transform: uppercase; letter-spacing: 0.5px; }
+.dato-valor { font-size: 1rem; color: #334155; font-weight: 500; }
+.resaltado { font-size: 1.3rem; color: #16a34a; font-weight: bold; }

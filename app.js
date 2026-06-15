@@ -13,7 +13,7 @@ document.addEventListener('DOMContentLoaded', () => {
         return new Intl.NumberFormat('es-PE', { style: 'currency', currency: 'PEN' }).format(valor);
     };
 
-    // Inyecta texto de forma SEGURA (si el ID no existe en el HTML, no crashea el programa)
+    // Inyecta texto de forma SEGURA (si el ID no existe en el HTML, no detiene el programa)
     const setTexto = (id, texto) => {
         const el = document.getElementById(id);
         if (el) el.innerText = texto;
@@ -39,20 +39,43 @@ document.addEventListener('DOMContentLoaded', () => {
         });
         mapa.addLayer(marcadoresAgrupados);
 
-        const modal = document.getElementById("modalObras");
-        const btnCerrar = document.querySelector(".modal-cerrar");
+        // --- LEYENDA DEL MAPA FLOTANTE ---
+        const leyenda = L.control({position: 'bottomright'});
+        leyenda.onAdd = function () {
+            const div = L.DomUtil.create('div', 'info leyenda');
+            div.innerHTML = `
+                <div style="background: rgba(255, 255, 255, 0.95); padding: 15px; border-radius: 8px; box-shadow: 0 4px 15px rgba(0,0,0,0.2); font-size: 0.85rem; color: #333; z-index: 1000; position: relative;">
+                    <h4 style="margin: 0 0 10px 0; color: #005a87; border-bottom: 1px solid #eee; padding-bottom: 5px;"><i class="fa-solid fa-circle-info"></i> Estado de la Obra</h4>
+                    <div style="display: flex; align-items: center; margin-bottom: 6px;">
+                        <span style="background: #16a34a; width: 14px; height: 14px; border-radius: 50%; display: inline-block; margin-right: 10px; border: 2px solid white;"></span> En Ejecución
+                    </div>
+                    <div style="display: flex; align-items: center; margin-bottom: 6px;">
+                        <span style="background: #dc2626; width: 14px; height: 14px; border-radius: 50%; display: inline-block; margin-right: 10px; border: 2px solid white;"></span> Paralizada
+                    </div>
+                    <div style="display: flex; align-items: center;">
+                        <span style="background: #0284c7; width: 14px; height: 14px; border-radius: 50%; display: inline-block; margin-right: 10px; border: 2px solid white;"></span> Terminada / Otros
+                    </div>
+                </div>
+            `;
+            return div;
+        };
+        leyenda.addTo(mapa);
 
-        if (btnCerrar && modal) {
-            btnCerrar.onclick = () => modal.style.display = "none";
-            window.onclick = (event) => { if (event.target === modal) modal.style.display = "none"; };
-        }
+        // --- SISTEMA DE CIERRE DE MODAL FLUIDO ---
+        document.addEventListener('click', function(e) {
+            // Cierra el modal al dar clic en la X o en el fondo oscuro
+            if (e.target.closest('.modal-cerrar') || e.target.id === 'modalObras') {
+                const m = document.getElementById("modalObras");
+                if(m) m.style.display = 'none';
+            }
+        });
 
         let todasLasObrasMapa = [];
 
         // Diseño de pines
         const crearIconoHtml = (color) => L.divIcon({
             className: "custom-pin",
-            html: `<div style="background-color:${color}; width:18px; height:18px; border-radius:50%; border:2px solid white; box-shadow:0 0 5px rgba(0,0,0,0.5); pointer-events:none;"></div>`,
+            html: `<div style="background-color:${color}; width:18px; height:18px; border-radius:50%; border:2px solid white; box-shadow:0 0 5px rgba(0,0,0,0.5);"></div>`,
             iconSize: [18, 18],
             iconAnchor: [9, 9]
         });
@@ -61,60 +84,70 @@ document.addEventListener('DOMContentLoaded', () => {
         const iconRojo = crearIconoHtml('#dc2626');
         const iconAzul = crearIconoHtml('#0284c7');
 
-        // Función que dibuja el mapa (Usada al inicio y por los filtros)
+        // Función que dibuja el mapa
         function renderizarMapa(obras) {
             marcadoresAgrupados.clearLayers(); 
 
             obras.forEach(obra => {
-                if (obra.Latitud && obra.Longitud) {
+                const lat = parseFloat(obra.Latitud);
+                const lng = parseFloat(obra.Longitud);
+
+                if (!isNaN(lat) && !isNaN(lng)) {
                     const estado = (obra['Estado de ejecución'] || "").toLowerCase();
                     let iconoActual = iconAzul;
                     if (estado.includes('paralizada')) iconoActual = iconRojo;
                     else if (estado.includes('ejecución') || estado.includes('ejecucion')) iconoActual = iconVerde;
 
-                    const marcador = L.marker([obra.Latitud, obra.Longitud], { icon: iconoActual });
+                    const marcador = L.marker([lat, lng], { icon: iconoActual });
 
-                    // Evento Click MEGA-SEGURO
+                    // EVENTO CLICK BLINDADO
                     marcador.on('click', function() {
-                        if(!modal) return; // Si no hay modal en el HTML, no hace nada
-                        
-                        setTexto("modal-titulo", obra['Nombre de obra'] || "Obra sin nombre");
-                        setTexto("modal-entidad", obra['Entidad Pública'] || "Entidad no registrada");
-                        setTexto("modal-estado", obra['Estado de ejecución'] || "Desconocido");
-                        setTexto("modal-avance", (obra['Avance Físico Real Acumulado (%)'] || 0) + "%");
-                        setTexto("modal-monto", formatoMoneda(obra['Monto de ejecución financiera de la obra']));
-                        setTexto("modal-ubicacion", `${obra['Distrito']}, ${obra['Provincia']}`);
-                        
-                        const codigoSnip = (obra['Código SNIP'] || '').toString().trim();
-                        setTexto("modal-snip", codigoSnip || "N/A");
+                        try {
+                            const m = document.getElementById("modalObras");
+                            if(!m) return; 
+                            
+                            setTexto("modal-titulo", obra['Nombre de obra'] || "Obra sin nombre");
+                            setTexto("modal-entidad", obra['Entidad Pública'] || "Entidad no registrada");
+                            setTexto("modal-estado", obra['Estado de ejecución'] || "Desconocido");
+                            setTexto("modal-avance", (obra['Avance Físico Real Acumulado (%)'] || 0) + "%");
+                            setTexto("modal-monto", formatoMoneda(obra['Monto de ejecución financiera de la obra']));
+                            setTexto("modal-ubicacion", `${obra['Distrito']}, ${obra['Provincia']}`);
+                            
+                            const codigoSnip = (obra['Código SNIP'] || '').toString().trim();
+                            setTexto("modal-snip", codigoSnip || "N/A");
 
-                        const btnEnlace = document.getElementById("modal-enlace-mef");
-                        if (btnEnlace) {
-                            if (codigoSnip) {
-                                btnEnlace.href = `detalle_obra.html?snip=${codigoSnip}`;
-                                btnEnlace.style.pointerEvents = 'auto';
-                                btnEnlace.style.opacity = '1';
-                                btnEnlace.innerHTML = '<i class="fa-solid fa-arrow-up-right-from-square"></i> Ver ficha detallada';
-                            } else {
-                                btnEnlace.href = '#';
-                                btnEnlace.style.pointerEvents = 'none';
-                                btnEnlace.style.opacity = '0.5';
-                                btnEnlace.innerText = 'Sin código SNIP';
+                            const btnEnlace = document.getElementById("modal-enlace-mef");
+                            if (btnEnlace) {
+                                if (codigoSnip) {
+                                    btnEnlace.href = `detalle_obra.html?snip=${codigoSnip}`;
+                                    btnEnlace.style.pointerEvents = 'auto';
+                                    btnEnlace.style.opacity = '1';
+                                    btnEnlace.innerHTML = '<i class="fa-solid fa-arrow-up-right-from-square"></i> Ver ficha detallada';
+                                } else {
+                                    btnEnlace.href = '#';
+                                    btnEnlace.style.pointerEvents = 'none';
+                                    btnEnlace.style.opacity = '0.5';
+                                    btnEnlace.innerText = 'Sin código SNIP';
+                                }
                             }
-                        }
 
-                        const estadoElem = document.getElementById("modal-estado");
-                        if (estadoElem) {
-                            if (estado.includes("paralizada")) {
-                                estadoElem.style.backgroundColor = "#fee2e2"; estadoElem.style.color = "#dc2626";         
-                            } else if (estado.includes("ejecución") || estado.includes("ejecucion")) {
-                                estadoElem.style.backgroundColor = "#dcfce7"; estadoElem.style.color = "#16a34a";
-                            } else {
-                                estadoElem.style.backgroundColor = "#e0f2fe"; estadoElem.style.color = "#0284c7";
+                            const estadoElem = document.getElementById("modal-estado");
+                            if (estadoElem) {
+                                if (estado.includes("paralizada")) {
+                                    estadoElem.style.backgroundColor = "#fee2e2"; estadoElem.style.color = "#dc2626";         
+                                } else if (estado.includes("ejecución") || estado.includes("ejecucion")) {
+                                    estadoElem.style.backgroundColor = "#dcfce7"; estadoElem.style.color = "#16a34a";
+                                } else {
+                                    estadoElem.style.backgroundColor = "#e0f2fe"; estadoElem.style.color = "#0284c7";
+                                }
                             }
-                        }
 
-                        modal.style.display = "flex"; // ¡Abre el modal!
+                            // Abre el modal de forma estándar
+                            m.style.display = 'flex';
+                            
+                        } catch(error) {
+                            console.error("Error al inyectar datos en el modal:", error);
+                        }
                     });
                     
                     marcadoresAgrupados.addLayer(marcador);
@@ -122,7 +155,7 @@ document.addEventListener('DOMContentLoaded', () => {
             });
         }
 
-        // Lógica de Filtros en mapa.html
+        // Lógica de Filtros del Mapa
         const btnFiltrarMapa = document.getElementById('btnFiltrar');
         if (btnFiltrarMapa) {
             btnFiltrarMapa.addEventListener('click', () => {
@@ -143,7 +176,14 @@ document.addEventListener('DOMContentLoaded', () => {
 
                     const estObra = quitarTildes((obra['Estado de ejecución'] || "").toLowerCase());
                     let pasaEst = true;
-                    if (valEstado !== 'todos') pasaEst = estObra.includes(valEstado);
+                    
+                    if (valEstado !== 'todos') {
+                        if (valEstado === 'terminada' || valEstado === 'recepcion') {
+                            pasaEst = estObra.includes('terminada') || estObra.includes('recepcion') || estObra.includes('liquidada') || estObra.includes('concluida') || estObra.includes('finalizado') || estObra.includes('finalizada');
+                        } else {
+                            pasaEst = estObra.includes(valEstado);
+                        }
+                    }
 
                     return pasaTxt && pasaProv && pasaEst;
                 });
@@ -158,7 +198,6 @@ document.addEventListener('DOMContentLoaded', () => {
             .then(obras => {
                 todasLasObrasMapa = obras;
                 
-                // Llenar KPIs del index.html si existen
                 const kpiTotales = document.getElementById('kpi-totales');
                 if (kpiTotales) {
                     let ejecucion = 0; let culminadas = 0; let inversionTotal = 0;
@@ -201,8 +240,6 @@ document.addEventListener('DOMContentLoaded', () => {
             })
             .catch(err => console.error("Error cargando JSON del Mapa:", err));
     }
-
-
     // ==========================================
     // 2. LÓGICA DEL GRÁFICO CIRCULAR
     // ==========================================
@@ -262,7 +299,14 @@ document.addEventListener('DOMContentLoaded', () => {
 
                 const estadoObraActual = quitarTildes((obra['Estado de ejecución'] || "").toLowerCase());
                 let pasaEstado = true;
-                if (estadoBusqueda !== 'todos') pasaEstado = estadoObraActual.includes(estadoBusqueda);
+                
+                if (estadoBusqueda !== 'todos') {
+                    if (estadoBusqueda === 'terminada' || estadoBusqueda === 'recepcion') {
+                        pasaEstado = estadoObraActual.includes('terminada') || estadoObraActual.includes('recepcion') || estadoObraActual.includes('liquidada') || estadoObraActual.includes('concluida') || estadoObraActual.includes('finalizado') || estadoObraActual.includes('finalizada');
+                    } else {
+                        pasaEstado = estadoObraActual.includes(estadoBusqueda);
+                    }
+                }
 
                 const avanceStr = (obra['Avance Físico Real Acumulado (%)'] || "0").toString().replace(',', '.');
                 const pasaAvance = (parseFloat(avanceStr) || 0) >= avanceMinimo;

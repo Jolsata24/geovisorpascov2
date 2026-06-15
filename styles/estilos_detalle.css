@@ -1,0 +1,195 @@
+/* ==========================================
+   1. VARIABLES Y RESET GENERAL
+   ========================================== */
+:root {
+    --primary: #007bb5;
+    --primary-dark: #005a87;
+    --bg-color: #f4f7f6;
+    --text-main: #333333;
+    --text-muted: #777777;
+    --white: #ffffff;
+    --shadow: 0 4px 15px rgba(0,0,0,0.08);
+}
+
+* {
+    box-sizing: border-box;
+    font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+}
+
+body {
+    background-color: var(--bg-color);
+    margin: 0;
+    padding: 0;
+    color: var(--text-main);
+}
+
+/* ==========================================
+   2. CABECERA SIMPLE
+   ========================================== */
+.navbar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background: var(--primary-dark);
+    padding: 15px 5%;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+}
+
+.logo {
+    font-size: 1.2rem;
+    font-weight: bold;
+    color: var(--white);
+    text-decoration: none;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.btn-volver {
+    color: var(--white);
+    text-decoration: none;
+    font-size: 0.95rem;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    transition: color 0.2s;
+}
+
+.btn-volver:hover {
+    color: #cbd5e1;
+}
+
+/* ==========================================
+   3. ESTRUCTURA DE DOS COLUMNAS
+   ========================================== */
+.detalle-container {
+    max-width: 1400px;
+    margin: 30px auto;
+    padding: 0 20px;
+    display: grid;
+    grid-template-columns: 350px 1fr; /* Izquierda fija, derecha ocupa el resto */
+    gap: 30px;
+    align-items: start; /* Para que la columna izquierda no se estire innecesariamente */
+}
+
+/* ==========================================
+   4. COLUMNA IZQUIERDA (RESUMEN)
+   ========================================== */
+.card {
+    background: var(--white);
+    border-radius: 12px;
+    box-shadow: var(--shadow);
+    padding: 25px;
+}
+
+.detalle-resumen {
+    position: sticky;
+    top: 20px; /* Se queda pegado mientras haces scroll en la derecha */
+    border-top: 4px solid var(--primary);
+}
+
+.etiqueta-estado {
+    display: inline-block;
+    padding: 5px 12px;
+    border-radius: 20px;
+    font-size: 0.8rem;
+    font-weight: bold;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+/* Tarjetitas internas de KPI (Avance y Presupuesto) */
+.kpi-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 15px;
+    margin-bottom: 25px;
+}
+
+.kpi-card {
+    background: #f8fafc;
+    border: 1px solid #e2e8f0;
+    border-radius: 10px;
+    padding: 15px;
+    text-align: center;
+}
+
+.kpi-card span {
+    display: block;
+    font-size: 0.7rem;
+    color: #64748b;
+    font-weight: 600;
+    margin-bottom: 5px;
+}
+
+.kpi-card h2 {
+    margin: 0;
+    font-size: 1.4rem;
+}
+
+/* ==========================================
+   5. COLUMNA DERECHA (IFRAME DEL MEF)
+   ========================================== */
+.detalle-ficha {
+    padding: 0; /* Quitamos el padding para que el iframe ocupe todo */
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    min-height: 800px; /* Altura generosa para la web del gobierno */
+}
+
+.ficha-header {
+    background: linear-gradient(135deg, #1e293b 0%, #0f172a 100%);
+    color: white;
+    padding: 15px 25px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.btn-outline {
+    background: transparent;
+    border: 1px solid rgba(255,255,255,0.3);
+    color: white;
+    padding: 8px 16px;
+    font-size: 0.85rem;
+    border-radius: 6px;
+    text-decoration: none;
+    transition: all 0.2s;
+}
+
+.btn-outline:hover {
+    background: rgba(255,255,255,0.1);
+    border-color: white;
+}
+
+.iframe-container {
+    flex-grow: 1;
+    background: #f8fafc;
+    position: relative;
+    width: 100%;
+}
+
+/* ==========================================
+   6. RESPONSIVE DESIGN (CELULARES Y TABLETS)
+   ========================================== */
+@media (max-width: 950px) {
+    .detalle-container {
+        grid-template-columns: 1fr; /* Cambia a una sola columna */
+    }
+    
+    .detalle-resumen {
+        position: relative; /* Quita el efecto sticky */
+        top: 0;
+    }
+    
+    .detalle-ficha {
+        min-height: 600px; /* Reduce un poco la altura en móviles */
+    }
+    
+    .ficha-header {
+        flex-direction: column;
+        gap: 15px;
+        text-align: center;
+    }
+}
