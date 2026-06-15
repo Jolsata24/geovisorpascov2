@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pasco Transparente - Observatorio Regional</title>
+    
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+    <link rel="stylesheet" href="https://unpkg.com/leaflet.markercluster@1.5.3/dist/MarkerCluster.css" />
+    <link rel="stylesheet" href="https://unpkg.com/leaflet.markercluster@1.5.3/dist/MarkerCluster.Default.css" />
+    
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <link rel="stylesheet" href="estilos.css">
+</head>
+<body>
+
+    <header class="hero">
+        <nav class="navbar">
+            <div class="logo"><i class="fa-solid fa-shield-halved"></i> Pasco Transparente</div>
+            <ul class="nav-links">
+                <li><a href="#">Observatorio</a></li>
+                <li><a href="#">Proyectos</a></li>
+                <li><a href="#">Noticias</a></li>
+                <li><a href="#">Transparencia</a></li>
+            </ul>
+            <button class="btn-primary">Consultar Obras</button>
+        </nav>
+        
+        <div class="hero-content">
+            <h1>Observatorio Regional de Pasco</h1>
+            <p>Transparencia radical en obras públicas. Transformamos datos regionales complejos en información accesible y confiable para cada ciudadano. Monitoreamos presupuestos, avance físico y aseguramos la integridad institucional en toda la región de Pasco.</p>
+            <div class="hero-buttons">
+                <button class="btn-primary"><i class="fa-solid fa-magnifying-glass"></i> Explorar Obras</button>
+                <button class="btn-outline"><i class="fa-regular fa-file-lines"></i> Ver Informes</button>
+            </div>
+        </div>
+    </header>
+
+    <main class="dashboard-container">
+        
+        <section class="nav-cards">
+            <div class="nav-card">
+                <div class="icon-box bg-blue"><i class="fa-solid fa-map-location-dot"></i></div>
+                <div class="nav-card-text">
+                    <h3>Mapa Geográfico de Obras</h3>
+                    <p>Visualiza la distribución territorial de los proyectos públicos en toda la región.</p>
+                </div>
+                <i class="fa-solid fa-chevron-right arrow"></i>
+            </div>
+            <div class="nav-card">
+                <div class="icon-box bg-teal"><i class="fa-solid fa-chart-pie"></i></div>
+                <div class="nav-card-text">
+                    <h3>Panel de Indicadores</h3>
+                    <p>Análisis detallado del avance físico y financiero de la inversión pública.</p>
+                </div>
+                <i class="fa-solid fa-chevron-right arrow"></i>
+            </div>
+        </section>
+
+        <section class="kpi-grid">
+            <div class="kpi-card">
+                <div class="kpi-header">
+                    <span>OBRAS TOTALES</span>
+                    <i class="fa-solid fa-cubes icon-blue"></i>
+                </div>
+                <h2>3,212</h2>
+                <small class="text-green"><i class="fa-solid fa-rotate"></i> Datos en tiempo real</small>
+            </div>
+            <div class="kpi-card">
+                <div class="kpi-header">
+                    <span>EN EJECUCIÓN</span>
+                    <i class="fa-solid fa-person-digging icon-yellow"></i>
+                </div>
+                <h2>0</h2>
+                <small>0% del total regional</small>
+            </div>
+            <div class="kpi-card">
+                <div class="kpi-header">
+                    <span>CULMINADAS</span>
+                    <i class="fa-solid fa-check-double icon-green"></i>
+                </div>
+                <h2>0</h2>
+                <small>Fase de cierre o entrega</small>
+            </div>
+            <div class="kpi-card">
+                <div class="kpi-header">
+                    <span>INVERSIÓN TOTAL</span>
+                    <i class="fa-solid fa-wallet icon-teal"></i>
+                </div>
+                <h2>S/ 0</h2>
+                <small>Presupuesto consolidado</small>
+            </div>
+        </section>
+
+        <section class="main-grid">
+            <div class="card map-card">
+                <div class="card-header">
+                    <h3>Distribución Geográfica</h3>
+                    <a href="mapa.html" class="btn-small" style="text-decoration:none; display:inline-block;">Ver Mapa Interactivo</a>
+                </div>
+                <div id="mi_mapa" class="map-container"></div>
+            </div>
+
+            <div class="side-widgets">
+                <div class="card">
+                    <h3>Obras por Provincia</h3>
+                    <div class="progress-container">
+                        <div class="progress-bar">
+                            <div class="progress-label"><span>Pasco</span><span>60%</span></div>
+                            <div class="track"><div class="fill bg-blue" style="width: 60%;"></div></div>
+                        </div>
+                        <div class="progress-bar">
+                            <div class="progress-label"><span>Daniel Alcides Carrión</span><span>25%</span></div>
+                            <div class="track"><div class="fill bg-purple" style="width: 25%;"></div></div>
+                        </div>
+                        <div class="progress-bar">
+                            <div class="progress-label"><span>Oxapampa</span><span>15%</span></div>
+                            <div class="track"><div class="fill bg-yellow" style="width: 15%;"></div></div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <h3 class="text-center">Estado Financiero</h3>
+                    <div class="chart-container">
+                        <canvas id="donutChart"></canvas>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+    <script src="https://unpkg.com/leaflet.markercluster@1.5.3/dist/leaflet.markercluster.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="app.js"></script>
+</body>
+</html>
