@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Explorar Obras - Pasco Transparente</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="estilos.css">
+</head>
+<body class="bg-light">
+
+    <header class="hero hero-small">
+        <nav class="navbar">
+            <div class="logo"><i class="fa-solid fa-shield-halved"></i> Pasco Transparente</div>
+            <ul class="nav-links">
+                <li><a href="index.html">Observatorio</a></li>
+                <li><a href="explorar.html" style="font-weight: bold; text-decoration: underline;">Proyectos</a></li>
+                <li><a href="mapa.html">Mapa</a></li>
+            </ul>
+        </nav>
+        <div class="hero-content hero-content-small">
+            <h1>Directorio de Proyectos</h1>
+            <p>Busca y filtra el estado detallado de todas las obras públicas en la región.</p>
+        </div>
+    </header>
+
+    <main class="explorar-container">
+        
+        <aside class="filtros-sidebar card">
+            <h3><i class="fa-solid fa-sliders"></i> Filtros Avanzados</h3>
+            
+            <div class="grupo-filtro">
+                <label>Buscar por Nombre o Entidad</label>
+                <input type="text" id="filtroTexto" placeholder="Ej. Colegio Chaupimarca...">
+            </div>
+
+            <div class="grupo-filtro">
+                <label>Provincia</label>
+                <select id="filtroProv">
+                    <option value="todas">Todas las Provincias</option>
+                    <option value="PASCO">Pasco</option>
+                    <option value="OXAPAMPA">Oxapampa</option>
+                    <option value="DANIEL ALCIDES CARRION">Daniel Alcides Carrión</option>
+                </select>
+            </div>
+
+            <div class="grupo-filtro">
+                <label>Estado del Proyecto</label>
+                <select id="filtroEstadoObra">
+                    <option value="todos">Todos los Estados</option>
+                    <option value="ejecucion">En Ejecución</option>
+                    <option value="paralizada">Paralizada</option>
+                    <option value="recepcion">Recepción / Terminada</option>
+                </select>
+            </div>
+
+            <div class="grupo-filtro">
+                <label>Avance Físico Mínimo: <span id="valorAvance">0%</span></label>
+                <input type="range" id="filtroAvance" min="0" max="100" value="0">
+            </div>
+
+            <button id="btnLimpiarFiltros" class="btn-outline" style="width: 100%; color: var(--text-main); border-color: #ccc;">Limpiar Filtros</button>
+        </aside>
+
+        <section class="resultados-section">
+            <div class="resultados-header">
+                <h2 id="contadorResultados">Cargando obras...</h2>
+            </div>
+            
+            <div id="contenedorObras" class="obras-grid"></div>
+        </section>
+
+    </main>
+
+    <script src="app.js"></script>
+</body>
+</html>

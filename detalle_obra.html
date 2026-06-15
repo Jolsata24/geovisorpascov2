@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Detalle de Obra - Pasco Transparente</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="estilos.css">
+</head>
+<body class="bg-light">
+
+    <header class="navbar" style="background: var(--primary-dark); padding: 15px 5%;">
+        <div class="logo" style="color: white;"><i class="fa-solid fa-shield-halved"></i> Pasco Transparente</div>
+        <a href="explorar.html" style="color: white; text-decoration: none;"><i class="fa-solid fa-arrow-left"></i> Volver al Directorio</a>
+    </header>
+
+    <main class="detalle-container">
+        
+        <section class="detalle-resumen card">
+            <span id="det-estado" class="etiqueta-estado">Cargando...</span>
+            <h1 id="det-titulo" style="font-size: 1.4rem; color: var(--primary-dark); margin: 15px 0;">Cargando título de la obra...</h1>
+            <p id="det-entidad" style="color: var(--text-muted); font-size: 0.9rem; margin-bottom: 20px;"><i class="fa-solid fa-building-columns"></i> Entidad...</p>
+
+            <div class="kpi-grid" style="grid-template-columns: 1fr 1fr; margin-bottom: 20px;">
+                <div class="kpi-card" style="padding: 15px;">
+                    <span style="font-size: 0.7rem; color: #888;">AVANCE FÍSICO</span>
+                    <h2 id="det-avance" style="font-size: 1.5rem; color: #16a34a; margin: 5px 0;">0%</h2>
+                </div>
+                <div class="kpi-card" style="padding: 15px;">
+                    <span style="font-size: 0.7rem; color: #888;">PRESUPUESTO EJECUTADO</span>
+                    <h2 id="det-monto" style="font-size: 1.2rem; color: var(--text-main); margin: 5px 0;">S/ 0.00</h2>
+                </div>
+            </div>
+
+            <div style="background: #f8fafc; padding: 15px; border-radius: 8px; font-size: 0.9rem; line-height: 1.6;">
+                <strong><i class="fa-solid fa-location-dot"></i> Ubicación:</strong> <span id="det-ubicacion">...</span><br>
+                <strong><i class="fa-solid fa-barcode"></i> Código SNIP:</strong> <span id="det-snip">...</span>
+            </div>
+        </section>
+
+        <section class="detalle-ficha card" style="padding: 0; overflow: hidden;">
+            <div style="background: linear-gradient(135deg, #1e293b 0%, #0f172a 100%); color: white; padding: 15px 20px; display: flex; justify-content: space-between; align-items: center;">
+                <div>
+                    <span style="display: block; font-size: 0.75rem; color: #38bdf8; font-weight: bold; letter-spacing: 1px;">PORTAL DE TRANSPARENCIA</span>
+                    <h3 style="margin: 0; font-size: 1.1rem;"><i class="fa-solid fa-landmark"></i> Ficha Oficial SSI - MEF</h3>
+                </div>
+                <a id="link-mef-externo" href="#" target="_blank" class="btn-outline" style="border-color: rgba(255,255,255,0.3); color: white; padding: 5px 15px; font-size: 0.85rem;">
+                    Abrir en nueva pestaña <i class="fa-solid fa-external-link-alt ms-1"></i>
+                </a>
+            </div>
+            
+            <div style="flex-grow: 1; background: #f8fafc; position: relative;">
+                <div id="mensaje-carga-iframe" style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); text-align: center; color: #64748b;">
+                    <i class="fa-solid fa-circle-notch fa-spin fa-2x mb-2"></i>
+                    <p>Cargando datos del Ministerio...</p>
+                </div>
+                
+                <iframe id="iframe-mef" src="" width="100%" height="100%" style="border: none; min-height: 700px; position: relative; z-index: 10; display: none;"></iframe>
+            </div>
+        </section>
+
+    </main>
+
+    <script src="detalle.js"></script>
+</body>
+</html>

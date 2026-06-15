@@ -214,3 +214,108 @@ body {
 .grupo-filtro select:focus {
     border-color: var(--primary);
 }
+
+/* --- ESTILOS PARA EXPLORAR.HTML --- */
+.hero-small {
+    min-height: 200px;
+    padding-bottom: 40px;
+}
+.hero-content-small { margin-top: 20px; }
+.hero-content-small h1 { font-size: 2rem; margin-bottom: 5px; }
+
+.explorar-container {
+    max-width: 1200px;
+    margin: -30px auto 40px auto;
+    padding: 0 20px;
+    display: grid;
+    grid-template-columns: 300px 1fr; /* Columna izquierda fija, derecha flexible */
+    gap: 30px;
+    position: relative;
+    z-index: 10;
+}
+
+.filtros-sidebar {
+    height: fit-content;
+    position: sticky;
+    top: 20px;
+}
+
+.filtros-sidebar h3 { margin-top: 0; border-bottom: 1px solid #eee; padding-bottom: 15px; margin-bottom: 20px;}
+
+/* Cuadrícula de Resultados */
+.resultados-header h2 { margin-top: 0; font-size: 1.2rem; color: var(--primary-dark); }
+
+.obras-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+    gap: 20px;
+}
+
+/* Tarjeta de Obra Individual */
+.obra-card {
+    background: white;
+    border-radius: 10px;
+    box-shadow: var(--shadow);
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    border-top: 4px solid var(--primary);
+    transition: transform 0.2s, box-shadow 0.2s;
+}
+
+.obra-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 8px 20px rgba(0,0,0,0.1);
+}
+
+.obra-card-titulo {
+    font-size: 1rem;
+    color: var(--text-main);
+    margin: 10px 0;
+    line-height: 1.4;
+    display: -webkit-box;
+    -webkit-line-clamp: 2; /* Corta el texto si es muy largo */
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+}
+
+.obra-card-entidad { font-size: 0.8rem; color: var(--text-muted); margin-bottom: 15px; }
+.obra-card-ubicacion { font-size: 0.85rem; color: #555; margin-bottom: 10px; }
+
+.obra-card-footer {
+    margin-top: auto;
+    border-top: 1px solid #eee;
+    padding-top: 15px;
+}
+
+/* --- ESTILOS PARA DETALLE_OBRA.HTML --- */
+.detalle-container {
+    max-width: 1300px;
+    margin: 30px auto;
+    padding: 0 20px;
+    display: grid;
+    grid-template-columns: 350px 1fr; /* Columna izquierda fija, derecha ocupa el resto */
+    gap: 30px;
+}
+
+.detalle-resumen {
+    height: fit-content;
+    position: sticky;
+    top: 20px;
+}
+
+.detalle-ficha {
+    min-height: 600px;
+    background: #ffffff;
+    display: flex;
+    flex-direction: column;
+}
+
+.scraping-area {
+    flex-grow: 1;
+    background: #f9fafb;
+    border: 1px dashed #cbd5e1;
+    border-radius: 8px;
+    padding: 20px;
+    overflow-y: auto;
+}
