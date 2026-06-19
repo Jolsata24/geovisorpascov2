@@ -212,7 +212,7 @@ document.addEventListener('DOMContentLoaded', () => {
     // ==========================================
     // 5. CARGA INICIAL DE DATOS
     // ==========================================
-    fetch('obras_pasco_geolocalizadas.json')
+    fetch('obras_pasco_Procesado.json')
         .then(res => res.json())
         .then(obras => {
             todasLasObrasExplorar = obras;

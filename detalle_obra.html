@@ -39,12 +39,12 @@
         </section>
 
         <section class="detalle-ficha card" style="padding: 0; overflow: hidden;">
-            <div style="background: linear-gradient(135deg, #1e293b 0%, #0f172a 100%); color: white; padding: 15px 20px; display: flex; justify-content: space-between; align-items: center;">
+            <div style="background: linear-gradient(135deg, #dc2626 0%, #991b1b 100%); color: white; padding: 15px 20px; display: flex; justify-content: space-between; align-items: center;">
                 <div>
-                    <span style="display: block; font-size: 0.75rem; color: #38bdf8; font-weight: bold; letter-spacing: 1px;">PORTAL DE TRANSPARENCIA</span>
-                    <h3 style="margin: 0; font-size: 1.1rem;"><i class="fa-solid fa-landmark"></i> Ficha Oficial SSI - MEF</h3>
+                    <span style="display: block; font-size: 0.75rem; color: #fca5a5; font-weight: bold; letter-spacing: 1px;">CONTRALORÍA GENERAL DE LA REPÚBLICA</span>
+                    <h3 style="margin: 0; font-size: 1.1rem;"><i class="fa-solid fa-camera-retro"></i> Ficha Oficial INFObras</h3>
                 </div>
-                <a id="link-mef-externo" href="#" target="_blank" class="btn-outline" style="border-color: rgba(255,255,255,0.3); color: white; padding: 5px 15px; font-size: 0.85rem;">
+                <a id="link-infobras-externo" href="#" target="_blank" class="btn-outline" style="border-color: rgba(255,255,255,0.3); color: white; padding: 5px 15px; font-size: 0.85rem; display: none;">
                     Abrir en nueva pestaña <i class="fa-solid fa-external-link-alt ms-1"></i>
                 </a>
             </div>
@@ -52,15 +52,15 @@
             <div style="flex-grow: 1; background: #f8fafc; position: relative;">
                 <div id="mensaje-carga-iframe" style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); text-align: center; color: #64748b;">
                     <i class="fa-solid fa-circle-notch fa-spin fa-2x mb-2"></i>
-                    <p>Cargando datos del Ministerio...</p>
+                    <p>Buscando expediente fotográfico...</p>
                 </div>
                 
-                <iframe id="iframe-mef" src="" width="100%" height="100%" style="border: none; min-height: 700px; position: relative; z-index: 10; display: none;"></iframe>
+                <iframe id="iframe-infobras" src="" width="100%" height="100%" style="border: none; min-height: 700px; position: relative; z-index: 10; display: none;"></iframe>
             </div>
         </section>
 
     </main>
 
-    <script src="js/detalle.js"></script>
+    <script src="js/detalle.js?v=3"></script>
 </body>
 </html>

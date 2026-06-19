@@ -253,10 +253,9 @@ body {
    ========================================== */
 .kpi-grid {
     display: grid;
-    grid-template-columns: repeat(4, 1fr);
+    grid-template-columns: repeat(3, 1fr); /* ANTES ERA 4 */
     gap: 20px;
 }
-
 .kpi-card {
     background: var(--card-bg);
     border-radius: var(--radius-card);
@@ -398,4 +397,53 @@ body {
     .kpi-grid { grid-template-columns: 1fr; } /* KPIs en 1 columna */
     .dashboard-container { margin-top: -80px; }
     .modal-cuerpo { grid-template-columns: 1fr; } /* El modal a 1 columna */
+}
+
+/* ==========================================
+   NUEVO: TARJETA DE FILTRO PRINCIPAL
+   ========================================== */
+.filtro-dashboard-card {
+    background: linear-gradient(135deg, var(--primary-dark) 0%, var(--primary) 100%);
+    border-radius: var(--radius-card);
+    padding: 25px 30px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    box-shadow: var(--shadow-md);
+    color: white;
+}
+
+.filtro-dashboard-text h2 { 
+    margin: 0 0 5px 0; 
+    font-size: 1.6rem; 
+    color: white; 
+    font-weight: 800;
+}
+
+.filtro-dashboard-text p { 
+    margin: 0; 
+    color: var(--primary-light); 
+    font-size: 0.95rem; 
+}
+
+.filtro-dashboard-select {
+    padding: 12px 25px;
+    font-size: 1.1rem;
+    border-radius: 8px;
+    border: none;
+    font-weight: bold;
+    color: var(--primary-dark);
+    cursor: pointer;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+    outline: none;
+    transition: transform 0.2s;
+}
+
+.filtro-dashboard-select:hover {
+    transform: scale(1.02);
+}
+
+@media (max-width: 768px) {
+    .filtro-dashboard-card { flex-direction: column; text-align: center; gap: 15px; }
+    .filtro-dashboard-select { width: 100%; }
 }

@@ -3,13 +3,12 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Pasco Transparente - Observatorio Regional</title>
+    <title>Dashboard - Pasco Transparente</title>
     
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
     <link rel="stylesheet" href="https://unpkg.com/leaflet.markercluster@1.5.3/dist/MarkerCluster.css" />
     <link rel="stylesheet" href="https://unpkg.com/leaflet.markercluster@1.5.3/dist/MarkerCluster.Default.css" />
-    
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     
     <link rel="stylesheet" href="styles/estilos_main.css">
 </head>
@@ -17,127 +16,157 @@
 
     <header class="hero">
         <nav class="navbar">
-            <a href="index.html" class="logo" style="text-decoration:none; color:inherit;">
+            <div class="logo">
                 <i class="fa-solid fa-shield-halved"></i> Pasco Transparente
-            </a>
+            </div>
             <ul class="nav-links">
-                <li><a href="index.html">Observatorio</a></li>
-                <li><a href="explorar.html">Proyectos</a></li>
-                <li><a href="mapa.html">Mapa Interactivo</a></li>
+                <li><a href="index.html" style="color: white; font-weight: bold; border-bottom: 2px solid white; padding-bottom: 5px;">Inicio</a></li>
+                <li><a href="mapa.html">Mapa Obras</a></li>
+                <li><a href="explorar.html">Directorio</a></li>
             </ul>
-            <button class="btn-primary" onclick="window.location.href='explorar.html'">Consultar Obras</button>
         </nav>
         
         <div class="hero-content">
-            <h1>Observatorio Regional de Pasco</h1>
-            <p>Transparencia radical en obras públicas. Transformamos datos regionales complejos en información accesible y confiable para cada ciudadano. Monitoreamos presupuestos, avance físico y aseguramos la integridad institucional en toda la región de Pasco.</p>
+            <h1>Observatorio de Obras Públicas</h1>
+            <p>Monitoreo ciudadano en tiempo real de la ejecución presupuestal y avance físico de los proyectos de inversión en la Región Pasco.</p>
             <div class="hero-buttons">
-                <button class="btn-primary" onclick="window.location.href='explorar.html'">
-                    <i class="fa-solid fa-magnifying-glass"></i> Explorar Obras
-                </button>
-                
+                <a href="mapa.html" class="btn-primary"><i class="fa-solid fa-map-location-dot"></i> Ver Mapa Interactivo</a>
+                <a href="explorar.html" class="btn-outline"><i class="fa-solid fa-magnifying-glass"></i> Buscar Obras</a>
             </div>
         </div>
     </header>
 
     <main class="dashboard-container">
-        
-        <section class="nav-cards">
-            <div class="nav-card">
+
+        <div class="filtro-dashboard-card">
+            <div class="filtro-dashboard-text">
+                <h2><i class="fa-solid fa-calendar-days"></i> Periodo de Ejecución</h2>
+                <p>Seleccione un año para visualizar los indicadores correspondientes</p>
+            </div>
+            <select id="filtroAnioDashboard" class="filtro-dashboard-select">
+                <option value="2026" selected>Año 2026</option>
+                <option value="2025">Año 2025</option>
+                <option value="2024">Año 2024</option>
+                <option value="2023">Año 2023</option>
+                <option value="2022">2022 y anteriores</option>
+                <option value="todos">Histórico Completo (Todos)</option>
+            </select>
+        </div>
+
+        <div class="nav-cards">
+            <a href="mapa.html" class="nav-card">
                 <div class="icon-box bg-blue"><i class="fa-solid fa-map-location-dot"></i></div>
                 <div class="nav-card-text">
-                    <h3>Mapa Geográfico de Obras</h3>
-                    <p>Visualiza la distribución territorial de los proyectos públicos en toda la región.</p>
+                    <h3>Mapa Interactivo</h3>
+                    <p>Explorar mapa a pantalla completa</p>
                 </div>
                 <i class="fa-solid fa-chevron-right arrow"></i>
-            </div>
-            <div class="nav-card">
-                <div class="icon-box bg-teal"><i class="fa-solid fa-chart-pie"></i></div>
+            </a>
+            <a href="explorar.html" class="nav-card">
+                <div class="icon-box bg-teal"><i class="fa-solid fa-magnifying-glass-chart"></i></div>
                 <div class="nav-card-text">
-                    <h3>Panel de Indicadores</h3>
-                    <p>Análisis detallado del avance físico y financiero de la inversión pública.</p>
+                    <h3>Directorio de Obras</h3>
+                    <p>Búsqueda avanzada y filtros</p>
                 </div>
                 <i class="fa-solid fa-chevron-right arrow"></i>
-            </div>
-        </section>
+            </a>
+        </div>
 
-        <section class="kpi-grid">
+        <div class="kpi-grid">
             <div class="kpi-card">
-                <div class="kpi-header">
-                    <span>OBRAS TOTALES</span>
-                    <i class="fa-solid fa-cubes icon-blue"></i>
-                </div>
-                <h2 id="kpi-totales">Cargando...</h2>
-                <small class="text-green"><i class="fa-solid fa-rotate"></i> Datos en tiempo real</small>
+                <div class="kpi-header"><span>TOTAL DE OBRAS</span> <i class="fa-solid fa-folder-open icon-blue" style="color: #0284c7;"></i></div>
+                <h2 id="kpi-totales">0</h2>
+                <small style="color: #64748b; font-weight: 500;">Registradas en la plataforma</small>
             </div>
             <div class="kpi-card">
-                <div class="kpi-header">
-                    <span>EN EJECUCIÓN</span>
-                    <i class="fa-solid fa-person-digging icon-yellow"></i>
-                </div>
-                <h2 id="kpi-ejecucion">...</h2>
-                <small>0% del total regional</small>
+                <div class="kpi-header"><span>EN EJECUCIÓN</span> <i class="fa-solid fa-person-digging icon-yellow" style="color: #10b981;"></i></div>
+                <h2 id="kpi-ejecucion" class="text-green">0</h2>
+                <small style="color: #64748b; font-weight: 500;">Obras activas actualmente</small>
             </div>
             <div class="kpi-card">
-                <div class="kpi-header">
-                    <span>CULMINADAS</span>
-                    <i class="fa-solid fa-check-double icon-green"></i>
-                </div>
-                <h2 id="kpi-culminadas">...</h2>
-                <small>Fase de cierre o entrega</small>
+                <div class="kpi-header"><span>CULMINADAS</span> <i class="fa-solid fa-check-circle icon-green" style="color: #f59e0b;"></i></div>
+                <h2 id="kpi-culminadas" style="color: #f59e0b;">0</h2>
+                <small style="color: #64748b; font-weight: 500;">Obras finalizadas o liquidadas</small>
             </div>
-            <div class="kpi-card">
-                <div class="kpi-header">
-                    <span>INVERSIÓN TOTAL</span>
-                    <i class="fa-solid fa-wallet icon-teal"></i>
-                </div>
-                <h2 id="kpi-inversion">...</h2>
-                <small>Presupuesto consolidado</small>
-            </div>
-        </section>
+        </div>
 
-        <section class="main-grid">
-            <div class="card map-card">
-                <div class="card-header">
-                    <h3>Distribución Geográfica</h3>
-                    <a href="mapa.html" class="btn-small" style="text-decoration:none; display:inline-block;">Ver Mapa Interactivo</a>
+        <div class="main-grid">
+            
+            <div class="card" style="padding: 0; overflow: hidden; display: flex; flex-direction: column;">
+                <div class="card-header" style="padding: 20px 24px 0 24px; border-bottom: none;">
+                    <h3><i class="fa-solid fa-location-dot" style="margin-right: 8px;"></i> Distribución Geográfica</h3>
                 </div>
-                <div id="mi_mapa" class="map-container"></div>
+                <div id="mi_mapa" class="map-container" style="border: none; border-radius: 0 0 var(--radius-card) var(--radius-card); margin-top: 15px;"></div>
             </div>
 
             <div class="side-widgets">
+                
                 <div class="card">
-                    <h3>Obras por Provincia</h3>
-                    <div class="progress-container">
-                        <div class="progress-bar">
-                            <div class="progress-label"><span>Pasco</span><span id="pct-pasco">0%</span></div>
-                            <div class="track"><div id="bar-pasco" class="fill bg-blue" style="width: 0%;"></div></div>
-                        </div>
-                        <div class="progress-bar">
-                            <div class="progress-label"><span>Daniel Alcides Carrión</span><span id="pct-dac">0%</span></div>
-                            <div class="track"><div id="bar-dac" class="fill bg-purple" style="width: 0%;"></div></div>
-                        </div>
-                        <div class="progress-bar">
-                            <div class="progress-label"><span>Oxapampa</span><span id="pct-oxa">0%</span></div>
-                            <div class="track"><div id="bar-oxa" class="fill bg-yellow" style="width: 0%;"></div></div>
-                        </div>
+                    <div class="card-header">
+                        <h3><i class="fa-solid fa-chart-bar" style="margin-right: 8px;"></i> Obras por Provincia</h3>
+                    </div>
+                    
+                    <div class="progress-bar">
+                        <div class="progress-label"><span>Pasco</span><span id="pct-pasco">0%</span></div>
+                        <div class="track"><div id="bar-pasco" class="fill bg-blue"></div></div>
+                    </div>
+                    
+                    <div class="progress-bar">
+                        <div class="progress-label"><span>Daniel Alcides Carrión</span><span id="pct-dac">0%</span></div>
+                        <div class="track"><div id="bar-dac" class="fill bg-purple"></div></div>
+                    </div>
+                    
+                    <div class="progress-bar" style="margin-bottom: 0;">
+                        <div class="progress-label"><span>Oxapampa</span><span id="pct-oxa">0%</span></div>
+                        <div class="track"><div id="bar-oxa" class="fill bg-yellow"></div></div>
                     </div>
                 </div>
 
                 <div class="card">
-                    <h3 class="text-center">Estado Financiero</h3>
+                    <div class="card-header">
+                        <h3><i class="fa-solid fa-chart-pie" style="margin-right: 8px;"></i> Avance Físico Promedio</h3>
+                    </div>
                     <div class="chart-container">
                         <canvas id="donutChart"></canvas>
                     </div>
                 </div>
-            </div>
-        </section>
 
+            </div>
+        </div>
     </main>
+
+    <div id="modalObras" class="modal-overlay">
+        <div class="modal-contenido">
+            <span class="modal-cerrar">&times;</span>
+            <div class="modal-cabecera">
+                <span id="modal-estado" class="etiqueta-estado">Estado</span>
+                <h2 id="modal-titulo" class="texto-principal">Nombre de la obra</h2>
+                <p id="modal-entidad" class="texto-secundario"><i class="fa-solid fa-building-columns"></i> Entidad Pública</p>
+            </div>
+            <div class="modal-cuerpo">
+                <div class="dato-bloque">
+                    <span class="dato-etiqueta">Avance Físico</span>
+                    <span id="modal-avance" class="dato-valor resaltado">0%</span>
+                </div>
+                <div class="dato-bloque">
+                    <span class="dato-etiqueta">Presupuesto</span>
+                    <span id="modal-monto" class="dato-valor">S/ 0.00</span>
+                </div>
+                <div class="dato-bloque" style="grid-column: 1 / -1;">
+                    <span class="dato-etiqueta">Ubicación</span>
+                    <span id="modal-ubicacion" class="dato-valor">Distrito, Provincia</span>
+                </div>
+                <div class="dato-bloque" style="grid-column: 1 / -1; background: transparent; padding: 0;">
+                    <a id="modal-enlace-mef" href="#" class="btn-primary" style="width: 100%;">Ver ficha detallada</a>
+                </div>
+            </div>
+        </div>
+    </div>
 
     <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
     <script src="https://unpkg.com/leaflet.markercluster@1.5.3/dist/leaflet.markercluster.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-    <script src="js/menu.js"></script>
+    
+    <script src="js/menu.js?v=2"></script>
 </body>
 </html>

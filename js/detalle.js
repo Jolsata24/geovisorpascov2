@@ -9,10 +9,9 @@ document.addEventListener('DOMContentLoaded', async function() {
         return;
     }
 
-    // 2. Cargar nuestro JSON local para pintar la columna izquierda
-    // Asegúrate de que la ruta sea correcta desde la raíz hacia el archivo JSON
+    // 2. Cargar el JSON local
     try {
-        const respuesta = await fetch('obras_pasco_geolocalizadas.json');
+        const respuesta = await fetch(`obras_pasco_geolocalizadas.json?t=${new Date().getTime()}`);
         const obras = await respuesta.json();
 
         // Buscar la obra específica por SNIP
@@ -20,9 +19,8 @@ document.addEventListener('DOMContentLoaded', async function() {
 
         if (obraEncontrada) {
             
-            // Función mejorada para limpiar y formatear Moneda
+            // Función para limpiar y formatear Moneda
             const formatoSoles = (valor) => {
-                // Limpiar: convertir a cadena, reemplazar espacio por punto, parsear a flotante
                 let num = 0;
                 if (valor) {
                     const strValor = valor.toString().replace(' ', '.').replace(',', '.');
@@ -60,22 +58,43 @@ document.addEventListener('DOMContentLoaded', async function() {
             if (elSnip) elSnip.innerText = snipURL;
 
             // ==========================================
-            // 3. LÓGICA DEL IFRAME (INVIERTE.PE)
+            // 3. LÓGICA DEL IFRAME GIGANTE (INFOBRAS)
             // ==========================================
-            const urlMEF = `https://ofi5.mef.gob.pe/ssi/ssi/Index?codigo=${snipURL}&tipo=1`;
-            
-            const iframe = document.getElementById('iframe-mef');
-            const linkExterno = document.getElementById('link-mef-externo');
+            const codigoInfobras = obraEncontrada['Codigo_INFObras_Extraido'];
+            const iframe = document.getElementById('iframe-infobras');
+            const linkExterno = document.getElementById('link-infobras-externo');
             const mensajeCarga = document.getElementById('mensaje-carga-iframe');
 
-            if (linkExterno) linkExterno.href = urlMEF;
+            // Validamos que exista un código válido para esta obra
+            if (codigoInfobras && codigoInfobras !== "NaN" && codigoInfobras !== "null" && codigoInfobras !== "") {
+                
+                // Formateamos quitando cualquier decimal residual
+                const cleanCode = codigoInfobras.toString().replace('.0', '');
+                
+                // Construimos la URL de la Contraloría
+                const urlInfobras = `https://infobras.contraloria.gob.pe/InfobrasWeb/Mapa/Sumario?ObraId=${cleanCode}`;
+                
+                if (linkExterno) {
+                    linkExterno.href = urlInfobras;
+                    linkExterno.style.display = 'inline-block';
+                }
 
-            if (iframe) {
-                iframe.src = urlMEF;
-                iframe.onload = function() {
-                    if (mensajeCarga) mensajeCarga.style.display = 'none';
-                    iframe.style.display = 'block';
-                };
+                if (iframe) {
+                    iframe.src = urlInfobras;
+                    iframe.onload = function() {
+                        if (mensajeCarga) mensajeCarga.style.display = 'none';
+                        iframe.style.display = 'block';
+                    };
+                }
+
+            } else {
+                // Si la obra no tiene registro en INFObras
+                if (mensajeCarga) {
+                    mensajeCarga.innerHTML = `
+                        <i class="fa-solid fa-eye-slash fa-2x mb-2" style="color: #cbd5e1;"></i>
+                        <p style="margin-top: 10px;">Esta obra aún no cuenta con un registro en INFObras.</p>
+                    `;
+                }
             }
 
         } else {
