@@ -4,16 +4,13 @@ document.addEventListener('DOMContentLoaded', () => {
     // 0. FUNCIONES DE UTILIDAD
     // ==========================================
     
-    // Limpia tildes y mayúsculas para búsquedas exactas
     const quitarTildes = (str) => str ? str.normalize("NFD").replace(/[\u0300-\u036f]/g, "") : "";
     
-    // Formatea números a moneda peruana
     const formatoMoneda = (valor) => {
         if (!valor || isNaN(valor)) return "Datos no disponibles";
         return new Intl.NumberFormat('es-PE', { style: 'currency', currency: 'PEN' }).format(valor);
     };
 
-    // Inyecta texto de forma SEGURA en el HTML
     const setTexto = (id, texto) => {
         const el = document.getElementById(id);
         if (el) el.innerText = texto;
@@ -23,7 +20,7 @@ document.addEventListener('DOMContentLoaded', () => {
     // 1. INICIALIZACIÓN DEL MAPA
     // ==========================================
     const contenedorMapa = document.getElementById('mi_mapa');
-    if (!contenedorMapa) return; // Si no hay mapa, detiene el script
+    if (!contenedorMapa) return; 
 
     const mapa = L.map('mi_mapa').setView([-10.6678, -76.2561], 9);
 
@@ -67,7 +64,6 @@ document.addEventListener('DOMContentLoaded', () => {
     // ==========================================
     const modal = document.getElementById("modalObras");
     
-    // Cerrar modal
     document.addEventListener('click', function(e) {
         if (e.target.closest('.modal-cerrar') || e.target.id === 'modalObras') {
             if(modal) modal.style.setProperty('display', 'none', 'important');
@@ -94,35 +90,41 @@ document.addEventListener('DOMContentLoaded', () => {
         marcadoresAgrupados.clearLayers(); 
 
         obras.forEach(obra => {
+            // Nota importante: Si tu archivo CSV no tiene columnas "Latitud" y "Longitud", 
+            // los pines no se van a dibujar.
             const lat = parseFloat(obra.Latitud);
             const lng = parseFloat(obra.Longitud);
 
             if (!isNaN(lat) && !isNaN(lng)) {
-                const estado = (obra['Estado de ejecución'] || "").toLowerCase();
+                // CORRECCIÓN: Estado de obra
+                const estado = (obra['Estado de obra'] || "").toLowerCase();
                 let iconoActual = iconAzul;
                 if (estado.includes('paralizada')) iconoActual = iconRojo;
-                else if (estado.includes('ejecución') || estado.includes('ejecucion')) iconoActual = iconVerde;
+                else if (estado.includes('ejecución') || estado.includes('ejecucion') || estado.includes('contrata')) iconoActual = iconVerde;
 
                 const marcador = L.marker([lat, lng], { icon: iconoActual });
 
-                // EVENTO CLICK DEL PIN
                 marcador.on('click', function() {
                     if(!modal) return; 
                     
-                    setTexto("modal-titulo", obra['Nombre de obra'] || "Obra sin nombre");
+                    // CORRECCIÓN: Nombre de la obra
+                    setTexto("modal-titulo", obra['Nombre de la obra'] || "Obra sin nombre");
                     setTexto("modal-entidad", obra['Entidad Pública'] || "Entidad no registrada");
-                    setTexto("modal-estado", obra['Estado de ejecución'] || "Desconocido");
-                    setTexto("modal-avance", (obra['Avance Físico Real Acumulado (%)'] || 0) + "%");
-                    setTexto("modal-monto", formatoMoneda(obra['Monto de ejecución financiera de la obra']));
+                    
+                    // CORRECCIÓN: Estado de obra
+                    setTexto("modal-estado", obra['Estado de obra'] || "Desconocido");
+                    
+                    
+                    // CORRECCIÓN: Monto Expediente Técnico (según tu CSV)
+                    
                     setTexto("modal-ubicacion", `${obra['Distrito']}, ${obra['Provincia']}`);
                     
                     const codigoSnip = (obra['Código SNIP'] || '').toString().trim();
                     setTexto("modal-snip", codigoSnip || "N/A");
 
-                    // Botón de ficha detallada
                     const btnEnlace = document.getElementById("modal-enlace-mef");
                     if (btnEnlace) {
-                        if (codigoSnip) {
+                        if (codigoSnip && codigoSnip !== "0") {
                             btnEnlace.href = `detalle_obra.html?snip=${codigoSnip}`;
                             btnEnlace.style.pointerEvents = 'auto';
                             btnEnlace.style.opacity = '1';
@@ -135,19 +137,17 @@ document.addEventListener('DOMContentLoaded', () => {
                         }
                     }
 
-                    // Color de la etiqueta
                     const estadoElem = document.getElementById("modal-estado");
                     if (estadoElem) {
                         if (estado.includes("paralizada")) {
                             estadoElem.style.backgroundColor = "#fee2e2"; estadoElem.style.color = "#dc2626";         
-                        } else if (estado.includes("ejecución") || estado.includes("ejecucion")) {
+                        } else if (estado.includes("ejecución") || estado.includes("ejecucion") || estado.includes('contrata')) {
                             estadoElem.style.backgroundColor = "#dcfce7"; estadoElem.style.color = "#16a34a";
                         } else {
                             estadoElem.style.backgroundColor = "#e0f2fe"; estadoElem.style.color = "#0284c7";
                         }
                     }
 
-                    // Forzar la apertura del modal sobre el mapa
                     modal.style.setProperty('display', 'flex', 'important');
                     modal.style.setProperty('z-index', '999999', 'important');
                     modal.style.setProperty('position', 'fixed', 'important');
@@ -173,13 +173,15 @@ document.addEventListener('DOMContentLoaded', () => {
             const valEstado = elEst ? quitarTildes(elEst.value.toLowerCase()) : "todos";
 
             const obrasFiltradas = todasLasObrasMapa.filter(obra => {
-                const textoObra = quitarTildes(`${obra['Nombre de obra']||''} ${obra['Código SNIP']||''}`.toLowerCase());
+                // CORRECCIÓN: Nombre de la obra
+                const textoObra = quitarTildes(`${obra['Nombre de la obra']||''} ${obra['Código SNIP']||''}`.toLowerCase());
                 const pasaTxt = txtBusqueda === "" || textoObra.includes(txtBusqueda);
 
                 const provObra = (obra['Provincia'] || "").trim().toUpperCase();
                 const pasaProv = (valProvincia === 'todas') || provObra.includes(valProvincia);
 
-                const estObra = quitarTildes((obra['Estado de ejecución'] || "").toLowerCase());
+                // CORRECCIÓN: Estado de obra
+                const estObra = quitarTildes((obra['Estado de obra'] || "").toLowerCase());
                 let pasaEst = true;
                 
                 if (valEstado !== 'todos') {
@@ -198,9 +200,10 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     // ==========================================
-    // 6. CARGA DE DATOS (JSON)
+    // 6. CARGA DE DATOS (JSON) - ¡AQUÍ ESTABA EL ERROR!
     // ==========================================
-    fetch('obras_pasco_geolocalizadas.json')
+    // Cambiado al nombre correcto del archivo
+    fetch('Obras_Pasco_Procesado.json')
         .then(res => res.json())
         .then(obras => {
             todasLasObrasMapa = obras;

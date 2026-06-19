@@ -76,12 +76,12 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // 3. FUNCIÓN MAESTRA DE ACTUALIZACIÓN
     function actualizarDashboard() {
-        const anioBusqueda = selectAnio ? selectAnio.value : "2026";
-        console.log("Filtro activado: Calculando datos para el año", anioBusqueda);
+        const anioBusqueda = selectAnio ? selectAnio.value : "todos";
 
         // A. FILTRAR DATOS
         const obrasFiltradas = todasLasObras.filter(obra => {
-            const fechaObra = (obra['Fecha de inicio de obra'] || "").toString();
+            // CORRECCIÓN: Nombre correcto de columna "Fecha de Inicio"
+            const fechaObra = (obra['Fecha de Inicio'] || "").toString();
             let pasaAnio = true;
             
             if (anioBusqueda !== 'todos') {
@@ -94,15 +94,14 @@ document.addEventListener('DOMContentLoaded', () => {
             return pasaAnio;
         });
 
-        console.log("Obras encontradas:", obrasFiltradas.length);
-
         // B. CÁLCULO DE KPIs
         let ejecucion = 0; let culminadas = 0; 
         let provPasco = 0; let provDAC = 0; let provOxa = 0;
         let sumaAvance = 0; let contadorAvance = 0;
 
         obrasFiltradas.forEach(obra => {
-            const estado = (obra['Estado de ejecución'] || "").toLowerCase();
+            // CORRECCIÓN: Nombre correcto de columna "Estado de obra"
+            const estado = (obra['Estado de obra'] || "").toLowerCase();
             if (estado.includes('ejecución') || estado.includes('ejecucion')) ejecucion++;
             if (estado.includes('terminada') || estado.includes('recepción') || estado.includes('liquidada') || estado.includes('concluida') || estado.includes('finalizado') || estado.includes('finalizada')) culminadas++;
             
@@ -158,7 +157,8 @@ document.addEventListener('DOMContentLoaded', () => {
                 const lng = parseFloat(obra.Longitud);
 
                 if (!isNaN(lat) && !isNaN(lng)) {
-                    const estado = (obra['Estado de ejecución'] || "").toLowerCase();
+                    // CORRECCIÓN: Nombre correcto de columna "Estado de obra"
+                    const estado = (obra['Estado de obra'] || "").toLowerCase();
                     let iconoActual = iconAzul;
                     if (estado.includes('paralizada')) iconoActual = iconRojo;
                     else if (estado.includes('ejecución') || estado.includes('ejecucion')) iconoActual = iconVerde;
@@ -169,10 +169,11 @@ document.addEventListener('DOMContentLoaded', () => {
                         const modal = document.getElementById("modalObras");
                         if(!modal) return; 
                         
-                        setTexto("modal-titulo", obra['Nombre de obra'] || "Obra sin nombre");
+                        // CORRECCIÓN: Nombre de la obra
+                        setTexto("modal-titulo", obra['Nombre de la obra'] || "Obra sin nombre");
                         setTexto("modal-entidad", obra['Entidad Pública'] || "Entidad no registrada");
                         setTexto("modal-avance", (obra['Avance Físico Real Acumulado (%)'] || 0) + "%");
-                        setTexto("modal-monto", formatoSoles(obra['Monto de ejecución financiera de la obra']));
+                        setTexto("modal-monto", formatoSoles(obra['Monto Expediente Técnico'])); // Ajustado el monto al nombre de tu CSV
                         setTexto("modal-ubicacion", `${obra['Distrito']}, ${obra['Provincia']}`);
                         
                         const codigoSnip = (obra['Código SNIP'] || '').toString().trim();
@@ -192,7 +193,8 @@ document.addEventListener('DOMContentLoaded', () => {
 
                         const estadoElem = document.getElementById("modal-estado");
                         if (estadoElem) {
-                            estadoElem.innerText = obra['Estado de ejecución'] || "Desconocido";
+                            // CORRECCIÓN: Estado de obra
+                            estadoElem.innerText = obra['Estado de obra'] || "Desconocido";
                             if (estado.includes("paralizada")) { estadoElem.style.background = "#fee2e2"; estadoElem.style.color = "#dc2626"; } 
                             else if (estado.includes("ejecución") || estado.includes("ejecucion")) { estadoElem.style.background = "#dcfce7"; estadoElem.style.color = "#16a34a"; } 
                             else { estadoElem.style.background = "#e0f2fe"; estadoElem.style.color = "#0284c7"; }
@@ -212,11 +214,14 @@ document.addEventListener('DOMContentLoaded', () => {
         selectAnio.addEventListener('change', actualizarDashboard);
     }
 
+    // AQUI ESTABA EL ERROR: Usar el fetch correcto para el dashboard
     fetch('Obras_Pasco_Procesado.json')
         .then(res => res.json())
         .then(obras => {
             todasLasObras = obras;
             actualizarDashboard(); 
         })
-        .catch(err => console.error("Error cargando JSON en Dashboard:", err));
+        .catch(err => {
+            console.error("Error cargando JSON en Dashboard:", err);
+        });
 });

@@ -44,8 +44,8 @@ body {
    2. CABECERA (HERO SECTION) Y NAVEGACIÓN
    ========================================== */
 .hero {
-    background: linear-gradient(135deg, rgba(15, 23, 42, 0.95) 0%, rgba(2, 132, 199, 0.85) 100%), 
-                url('https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?q=80&w=2070') center/cover no-repeat;
+    background: linear-gradient(135deg, rgba(15, 23, 42, 0.95) 0%, rgba(2, 133, 199, 0.484) 100%), 
+                url(../img/banner.jpg) center/cover no-repeat;
     color: white;
     padding: 20px 5% 80px 5%; /* Mucho padding abajo para que el dashboard suba */
     min-height: 450px;

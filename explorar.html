@@ -11,10 +11,12 @@
 
     <header class="hero hero-small">
         <nav class="navbar">
-            <a href="index.html" class="logo" style="text-decoration:none; color:inherit;"><i class="fa-solid fa-shield-halved"></i> Pasco Transparente</a>
+            <a href="index.html" class="logo" style="text-decoration:none; color:inherit;">
+                <i class="fa-solid fa-shield-halved"></i> Pasco Transparente
+            </a>
             <ul class="nav-links">
                 <li><a href="index.html">Observatorio</a></li>
-                <li><a href="explorar.html" style="font-weight: bold; text-decoration: underline;">Proyectos</a></li>
+                <li><a href="explorar.html" class="active-link">Proyectos</a></li>
                 <li><a href="mapa.html">Mapa</a></li>
             </ul>
         </nav>
@@ -26,56 +28,65 @@
 
     <main class="explorar-container">
         
-        <aside class="filtros-sidebar card">
+        <aside class="filtros-sidebar">
             <h3><i class="fa-solid fa-sliders"></i> Filtros Avanzados</h3>
+            
             <div class="grupo-filtro">
                 <label>Año de Ejecución</label>
-                <select id="filtroAnio">
-                    <option value="todos">Todos los años</option>
-                    <option value="2026">2026</option>
-                    <option value="2025">2025</option>
-                    <option value="2024">2024</option>
-                    <option value="2023">2023</option>
-                    <option value="2022">2022 y anteriores</option>
-                </select>
+                <div class="select-wrapper">
+                    <select id="filtroAnio">
+                        <option value="todos">Todos los años</option>
+                        <option value="2026">2026</option>
+                        <option value="2025">2025</option>
+                        <option value="2024">2024</option>
+                        <option value="2023">2023</option>
+                        <option value="2022">2022 y anteriores</option>
+                    </select>
+                </div>
             </div>
 
             <div class="grupo-filtro">
                 <label>Buscar por Nombre o Entidad</label>
-                <input type="text" id="filtroTexto" placeholder="Ej. Colegio Chaupimarca...">
+                <div class="input-icon-wrapper">
+                    <i class="fa-solid fa-magnifying-glass icon-left"></i>
+                    <input type="text" id="filtroTexto" placeholder="Ej. Colegio Chaupimarca...">
+                </div>
             </div>
             
             <div class="grupo-filtro">
                 <label>Provincia</label>
-                <select id="filtroProv">
-                    <option value="todas">Todas las Provincias</option>
-                    <option value="PASCO">Pasco</option>
-                    <option value="OXAPAMPA">Oxapampa</option>
-                    <option value="DANIEL ALCIDES CARRION">Daniel Alcides Carrión</option>
-                </select>
+                <div class="select-wrapper">
+                    <select id="filtroProv">
+                        <option value="todas">Todas las Provincias</option>
+                        <option value="PASCO">Pasco</option>
+                        <option value="OXAPAMPA">Oxapampa</option>
+                        <option value="DANIEL ALCIDES CARRION">Daniel Alcides Carrión</option>
+                    </select>
+                </div>
             </div>
 
             <div class="grupo-filtro">
                 <label>Estado del Proyecto</label>
-                <select id="filtroEstadoObra">
-                    <option value="todos">Todos los Estados</option>
-                    <option value="ejecucion">En Ejecución</option>
-                    <option value="paralizada">Paralizada</option>
-                    <option value="recepcion">Recepción / Terminada</option>
-                </select>
+                <div class="select-wrapper">
+                    <select id="filtroEstadoObra">
+                        <option value="todos">Todos los Estados</option>
+                        <option value="ejecucion">En Ejecución / Contrata</option>
+                        <option value="paralizada">Paralizada</option>
+                        <option value="recepcion">Recepción / Terminada</option>
+                    </select>
+                </div>
             </div>
 
-            <div class="grupo-filtro">
-                <label>Avance Físico Mínimo: <span id="valorAvance">0%</span></label>
-                <input type="range" id="filtroAvance" min="0" max="100" value="0">
-            </div>
 
-            <button id="btnLimpiarFiltros" class="btn-outline" style="width: 100%; color: var(--text-main); border-color: #ccc;">Limpiar Filtros</button>
+
+            <button id="btnLimpiarFiltros" class="btn-limpiar">
+                <i class="fa-solid fa-rotate-right"></i> Limpiar Filtros
+            </button>
         </aside>
 
         <section class="resultados-section">
             <div class="resultados-header">
-                <h2 id="contadorResultados">Cargando obras...</h2>
+                <h2 id="contadorResultados"><i class="fa-solid fa-circle-notch fa-spin"></i> Cargando directorio...</h2>
             </div>
             
             <div id="contenedorObras" class="obras-grid"></div>
