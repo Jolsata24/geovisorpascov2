@@ -1,285 +1,288 @@
-/* VARIABLES GLOBALES - ALINEADAS AL DISEÑO DEL INICIO */
+/* =======================================================
+   1. VARIABLES Y DISEÑO DEL SISTEMA (Idéntico al Inicio)
+======================================================= */
 :root {
-    --primary-main: #005a87;      /* Azul institucional principal */
-    --primary-light: #0284c7;     /* Azul brillante para botones/enlaces */
-    --primary-dark: #003f5c;      /* Azul muy oscuro para el Header */
-    --bg-main: #f1f5f9;           /* Fondo gris muy claro para el cuerpo */
-    --bg-sidebar: #ffffff;        /* Sidebar blanco y limpio */
-    --text-main: #334155;         /* Texto principal gris oscuro */
-    --text-muted: #64748b;        /* Texto secundario */
-    --border-color: #e2e8f0;      /* Bordes suaves */
-    --card-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -1px rgba(0, 0, 0, 0.03);
-    --hover-shadow: 0 10px 20px -5px rgba(0, 0, 0, 0.1);
+    --color-primario: #1e293b;    
+    --color-secundario: #3b82f6;  
+    --color-acento: #10b981;      
+    
+    --bg-body: #f8fafc;           
+    --bg-superficie: #ffffff;     
+    
+    --texto-principal: #334155;   
+    --texto-claro: #f1f5f9;       
+    --texto-gris: #64748b;
+    
+    --sombra-suave: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+    --sombra-hover: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+    --transicion: all 0.3s ease;
+    --radius-card: 12px;
+    
+    --fuente-base: 'Inter', system-ui, -apple-system, sans-serif;
 }
 
-* { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Inter', 'Segoe UI', system-ui, sans-serif; }
-
-body.bg-light { background-color: var(--bg-main); color: var(--text-main); }
-
-/* =========================================
-   HERO / BANNER SUPERIOR
-   ========================================= */
-.hero-small {
-    background: linear-gradient(135deg, var(--primary-dark) 0%, #005a87 100%);
-    color: white;
-    padding-bottom: 25px;
-}
-.navbar { display: flex; justify-content: space-between; align-items: center; padding: 20px 5%; border-bottom: 1px solid rgba(255,255,255,0.15); }
-.navbar .logo { font-size: 1.5rem; font-weight: 800; }
-.nav-links { list-style: none; display: flex; gap: 20px; }
-.nav-links a { color: #e2e8f0; text-decoration: none; font-size: 0.95rem; transition: 0.3s; }
-.nav-links a:hover, .active-link { color: white; font-weight: bold; text-decoration: underline !important; }
-.hero-content-small { text-align: center; padding: 35px 20px 10px 20px; }
-.hero-content-small h1 { font-size: 2.2rem; margin-bottom: 10px; font-weight: 800; letter-spacing: -0.5px; }
-.hero-content-small p { color: #cbd5e1; font-size: 1.05rem; max-width: 600px; margin: 0 auto; }
-
-/* =========================================
-   ESTRUCTURA PRINCIPAL (Grid)
-   ========================================= */
-.explorar-container {
-    display: grid;
-    grid-template-columns: 300px 1fr;
-    gap: 30px;
-    max-width: 1400px;
-    margin: -25px auto 50px auto; /* Superposición sutil con el banner */
-    padding: 0 5%;
-    align-items: start;
-    position: relative;
-    z-index: 10;
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
 }
 
-/* =========================================
-   SIDEBAR BLANCO (Filtros)
-   ========================================= */
-.filtros-sidebar {
-    background-color: var(--bg-sidebar);
-    border-radius: 12px;
-    padding: 25px;
-    color: var(--text-main);
+body {
+    font-family: var(--fuente-base);
+    background-color: var(--bg-body);
+    color: var(--texto-principal);
+    line-height: 1.6;
+}
+
+a {
+    text-decoration: none;
+    color: inherit;
+}
+
+/* =======================================================
+   2. HEADER Y NAVEGACIÓN (Estilo calcado del Inicio)
+======================================================= */
+.hero-small { display: flex; flex-direction: column; background-color: var(--color-primario); }
+
+.navbar {
+    background-color: var(--color-primario);
+    padding: 1rem 5%;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
     position: sticky;
-    top: 20px;
-    box-shadow: var(--card-shadow);
-    border: 1px solid var(--border-color);
+    top: 0;
+    z-index: 1000;
+    box-shadow: var(--sombra-suave);
+}
+
+.navbar .logo {
+    color: var(--texto-claro);
+    font-size: 1.5rem;
+    font-weight: 700;
+}
+
+.nav-links { display: flex; gap: 2rem; list-style: none; }
+
+/* Apuntamos a los enlaces del menú para que tengan la misma línea animada */
+.nav-links a {
+    color: var(--texto-claro);
+    font-weight: 500;
+    font-size: 0.95rem;
+    padding: 0.5rem 0;
+    position: relative;
+    transition: var(--transicion);
+}
+
+.nav-links a::after {
+    content: '';
+    position: absolute;
+    bottom: 0; left: 0;
+    width: 0%; height: 2px;
+    background-color: var(--color-secundario);
+    transition: var(--transicion);
+}
+
+.nav-links a:hover::after, 
+.nav-links a.active-link::after { width: 100%; }
+.nav-links a:hover, 
+.nav-links a.active-link { color: var(--bg-superficie); }
+
+/* Contenido del Banner pequeño */
+.hero-content-small {
+    text-align: center;
+    padding: 3.0rem ;
+    background: linear-gradient(to right, rgba(30, 41, 59, 0.95), rgba(30, 41, 59, 0.8));
+    color: var(--texto-claro);
+}
+.hero-content-small h1 { font-size: 2rem; font-weight: 800; margin-bottom: 0.2rem; }
+.hero-content-small p { font-size: 1rem; opacity: 0.9; }
+
+/* =======================================================
+   3. CONTENEDOR PRINCIPAL (Mismos márgenes que Dashboard)
+======================================================= */
+.explorar-container {
+    max-width: 1200px; /* Igual al dashboard-container */
+    margin: 2rem auto; /* Igual al dashboard-container */
+    padding: 0 20px;
+    display: grid;
+    grid-template-columns: 280px 1fr;
+    gap: 1.5rem; /* Igual al gap de main-grid */
+    align-items: start;
+}
+
+/* =======================================================
+   4. PANEL DE FILTROS (Mismo estilo que las tarjetas)
+======================================================= */
+.filtros-sidebar {
+    background-color: var(--bg-superficie);
+    padding: 1.5rem; /* Igual a .card */
+    border-radius: var(--radius-card); /* Igual a .card */
+    box-shadow: var(--sombra-suave); /* Igual a .card */
+    border: 1px solid #e2e8f0; /* Igual a .card */
+    position: sticky;
+    top: 80px; /* Para que baje contigo pero no tape el menú */
 }
 
 .filtros-sidebar h3 {
-    font-size: 1.15rem;
-    color: var(--primary-main);
-    margin-bottom: 25px;
-    border-bottom: 2px solid #f1f5f9;
-    padding-bottom: 15px;
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    font-weight: 700;
-}
-
-.grupo-filtro { margin-bottom: 22px; }
-.grupo-filtro label {
-    display: block;
-    font-size: 0.8rem;
-    font-weight: 700;
-    color: var(--text-muted);
-    margin-bottom: 8px;
-    text-transform: uppercase;
-    letter-spacing: 0.5px;
-}
-
-/* Inputs y Selects Claros */
-.select-wrapper, .input-icon-wrapper { position: relative; }
-
-.filtros-sidebar select, 
-.filtros-sidebar input[type="text"] {
-    width: 100%;
-    background-color: #f8fafc; /* Fondo gris súper clarito */
-    border: 1px solid #cbd5e1;
-    color: var(--text-main);
-    padding: 12px 15px;
-    border-radius: 8px;
-    font-size: 0.95rem;
-    transition: all 0.3s;
-    appearance: none;
-    outline: none;
-    font-weight: 500;
-}
-.filtros-sidebar input[type="text"] { padding-left: 42px; }
-.filtros-sidebar input[type="text"]::placeholder { color: #94a3b8; font-weight: 400; }
-
-.icon-left {
-    position: absolute;
-    left: 15px;
-    top: 50%;
-    transform: translateY(-50%);
-    color: #94a3b8;
-    pointer-events: none;
-}
-
-/* Flecha personalizada para selects */
-.select-wrapper::after {
-    content: '\f107';
-    font-family: 'FontAwesome';
-    position: absolute;
-    right: 15px;
-    top: 50%;
-    transform: translateY(-50%);
-    color: #64748b;
-    pointer-events: none;
-}
-
-.filtros-sidebar select:focus, 
-.filtros-sidebar input[type="text"]:focus {
-    border-color: var(--primary-light);
-    background-color: #ffffff;
-    box-shadow: 0 0 0 3px rgba(2, 132, 199, 0.15);
-}
-
-/* Input Range Avanzado */
-.mt-range { margin-top: 30px; }
-.label-range { display: flex !important; justify-content: space-between; align-items: center; }
-.badge-avance {
-    background: var(--primary-light);
-    color: white;
-    padding: 3px 10px;
-    border-radius: 12px;
-    font-size: 0.8rem;
-    font-weight: 700;
-}
-.modern-range {
-    width: 100%;
-    accent-color: var(--primary-light);
-    cursor: pointer;
-    margin-top: 10px;
-}
-
-/* Botón Limpiar */
-.btn-limpiar {
-    width: 100%;
-    background-color: #f1f5f9;
-    border: 1px solid #cbd5e1;
-    color: var(--text-main);
-    padding: 12px;
-    border-radius: 8px;
-    font-weight: 600;
-    cursor: pointer;
-    transition: all 0.3s;
-    margin-top: 15px;
-    display: flex;
-    justify-content: center;
-    align-items: center;
+    font-size: 1.1rem;
+    color: var(--color-primario);
+    border-bottom: 1px solid #e2e8f0; /* Igual a .card-header */
+    padding-bottom: 10px;
+    margin-bottom: 15px;
+    display: flex; 
+    align-items: center; 
     gap: 8px;
 }
-.btn-limpiar:hover { background-color: #e2e8f0; color: #0f172a; border-color: #94a3b8; }
 
-/* =========================================
-   RESULTADOS Y TARJETAS
-   ========================================= */
-.resultados-header { margin-bottom: 20px; margin-top: 25px; }
-#contadorResultados {
-    font-size: 1.1rem;
-    color: var(--text-main);
-    font-weight: 600;
+.grupo-filtro { margin-bottom: 1.2rem; }
+
+.grupo-filtro label {
+    display: block; 
+    font-size: 0.85rem; 
+    font-weight: 700; 
+    color: var(--texto-gris); 
+    margin-bottom: 0.5rem;
+}
+
+/* Estilos de Select e Input (Mismo estilo que filtro-dashboard-select) */
+.select-wrapper select, 
+.input-icon-wrapper input {
+    width: 100%;
+    padding: 0.6rem 1rem;
+    border-radius: 8px;
+    border: 1px solid #cbd5e1;
+    font-size: 1rem;
+    font-family: var(--fuente-base);
+    background-color: var(--bg-body);
+    color: var(--texto-principal);
+    outline: none;
+    transition: var(--transicion);
+}
+
+.select-wrapper select:focus, 
+.input-icon-wrapper input:focus {
+    border-color: var(--color-secundario);
+    box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.2);
+}
+
+.input-icon-wrapper { position: relative; }
+.input-icon-wrapper .icon-left {
+    position: absolute; left: 12px; top: 50%; transform: translateY(-50%); color: #94a3b8;
+}
+.input-icon-wrapper input { padding-left: 2.2rem; }
+
+.btn-limpiar {
+    width: 100%; padding: 0.8rem; margin-top: 1rem;
+    background-color: transparent; color: var(--texto-gris);
+    border: 1px solid #cbd5e1; border-radius: 8px; font-weight: 600; cursor: pointer; transition: var(--transicion);
+}
+.btn-limpiar:hover { background-color: #f1f5f9; color: var(--color-primario); border-color: #94a3b8; }
+
+/* =======================================================
+   5. RESULTADOS Y CUADRÍCULA DE OBRAS
+======================================================= */
+.resultados-header h2 { 
+    font-size: 1.2rem; 
+    color: var(--color-primario); 
+    margin-bottom: 15px; 
+    font-weight: 700; 
 }
 
 .obras-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
-    gap: 24px;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: 1.5rem; /* Igual al main-grid */
 }
 
-/* Card inyectada por JS */
+/* =======================================================
+   6. TARJETA DE OBRA (Mismo estilo que .nav-card)
+======================================================= */
 .obra-card {
-    background: white;
-    border: 1px solid var(--border-color);
-    border-radius: 12px;
-    padding: 24px;
-    box-shadow: var(--card-shadow);
-    transition: all 0.3s ease;
-    display: flex;
+    background-color: var(--bg-superficie);
+    border-radius: var(--radius-card); /* 12px */
+    border: 1px solid #e2e8f0;
+    padding: 1.5rem; /* Igual al padding de tus cards del inicio */
+    box-shadow: var(--sombra-suave);
+    transition: var(--transicion);
+    display: flex; 
     flex-direction: column;
-    height: 100%;
 }
+
+/* Efecto hover idéntico a tus nav-cards del dashboard */
 .obra-card:hover {
-    transform: translateY(-4px);
-    box-shadow: var(--hover-shadow);
-    border-color: #cbd5e1;
+    transform: translateY(-3px);
+    box-shadow: var(--sombra-hover);
+    border-color: var(--color-secundario);
 }
 
-.etiqueta-estado {
-    padding: 5px 12px;
-    border-radius: 20px;
-    font-size: 0.75rem;
-    font-weight: 700;
-    text-transform: uppercase;
-    letter-spacing: 0.5px;
-}
-
-.obra-card-titulo {
-    font-size: 1.1rem;
-    color: var(--primary-dark);
-    margin: 16px 0 12px 0;
-    line-height: 1.45;
-    font-weight: 800;
-    /* Cortar texto a 3 líneas para mejor visibilidad */
-    display: -webkit-box;
-    -webkit-line-clamp: 3;
-    -webkit-box-orient: vertical;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    min-height: 4.3em;
-}
-
-.obra-card-entidad, .obra-card-ubicacion {
-    font-size: 0.85rem;
-    color: var(--text-muted);
+/* Etiqueta de estado idéntica a la etiqueta de tu Modal del inicio */
+.obra-estado-badge {
+    display: inline-block; 
+    padding: 4px 10px; 
+    border-radius: 20px; 
+    font-size: 0.75rem; 
+    font-weight: 700; 
+    text-transform: uppercase; 
     margin-bottom: 10px;
-    display: flex;
-    align-items: flex-start;
-    gap: 10px;
-    font-weight: 500;
+    background: #e0e7ff; 
+    color: #4338ca; 
 }
-.obra-card-entidad i, .obra-card-ubicacion i { margin-top: 2px; color: #94a3b8; width: 14px; text-align: center; }
 
-/* Footer de la tarjeta y Barra de Progreso */
+.obra-card h3 { 
+    font-size: 1.1rem; 
+    color: var(--color-primario); 
+    line-height: 1.4; 
+    margin-bottom: 10px; 
+}
+
+.obra-detalle-item { 
+    font-size: 0.9rem; 
+    color: var(--texto-gris); 
+    margin-bottom: 6px; 
+    display: flex; 
+    align-items: center; 
+    gap: 8px; 
+}
+
 .obra-card-footer {
-    margin-top: auto;
-    padding-top: 20px;
-    border-top: 1px solid #f1f5f9;
+    margin-top: auto; 
+    padding-top: 15px; 
+    border-top: 1px solid #e2e8f0; 
+    display: flex; 
+    justify-content: space-between; 
+    align-items: center;
 }
 
-.track {
-    width: 100%;
-    height: 8px;
-    background-color: #f1f5f9;
-    border-radius: 4px;
-    margin-bottom: 18px;
-    overflow: hidden;
-}
-.fill {
-    height: 100%;
-    border-radius: 4px;
-    transition: width 1s ease-in-out;
+.monto-destacado { 
+    font-size: 1rem; 
+    font-weight: 700; 
+    color: var(--color-primario); 
 }
 
-/* Botón Detalles */
-.btn-primary {
-    display: block;
-    width: 100%;
-    text-align: center;
-    background-color: var(--primary-light);
-    color: white;
-    padding: 12px;
-    border-radius: 8px;
-    text-decoration: none;
-    font-weight: 600;
-    font-size: 0.95rem;
-    transition: all 0.3s;
-    border: none;
+/* Botón idéntico al .btn-primary de tu modal */
+.btn-ver-detalle {
+    background-color: var(--color-secundario); 
+    color: white; 
+    padding: 8px 16px; 
+    border-radius: 8px; 
+    text-decoration: none; 
+    font-size: 0.85rem; 
+    font-weight: 600; 
+    transition: var(--transicion);
 }
-.btn-primary:hover { background-color: var(--primary-main); box-shadow: 0 4px 6px rgba(2, 132, 199, 0.2); }
+.btn-ver-detalle:hover { background-color: #2563eb; }
 
-/* Responsive para Móviles */
-@media (max-width: 900px) {
-    .explorar-container { grid-template-columns: 1fr; margin-top: 10px; }
-    .filtros-sidebar { position: relative; top: 0; margin-bottom: 20px; }
-    .nav-links { display: none; }
+/* =======================================================
+   7. RESPONSIVO
+======================================================= */
+@media screen and (max-width: 992px) {
+    .explorar-container { grid-template-columns: 1fr; }
+    .filtros-sidebar { position: static; margin-bottom: 1rem; }
+}
+
+@media screen and (max-width: 768px) {
+    .navbar { flex-direction: column; gap: 1rem; }
+    .nav-links { width: 100%; justify-content: center; }
+    .obras-grid { grid-template-columns: 1fr; }
 }

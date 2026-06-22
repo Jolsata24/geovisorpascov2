@@ -1,449 +1,301 @@
-/* ==========================================
-   1. VARIABLES MODERNAS Y RESET
-   ========================================== */
+/* =======================================================
+   1. VARIABLES Y DISEÑO DEL SISTEMA (Design Tokens)
+======================================================= */
 :root {
-    /* Paleta de Colores Institucional Moderna */
-    --primary: #0284c7;        /* Azul vibrante */
-    --primary-dark: #0f172a;   /* Azul noche intenso para textos y fondos */
-    --primary-light: #e0f2fe;  /* Azul muy claro para fondos de iconos */
+    --color-primario: #1e293b;    
+    --color-secundario: #3b82f6;  
+    --color-acento: #10b981;      
     
-    --bg-app: #f1f5f9;         /* Gris azulado muy suave para el fondo global */
-    --card-bg: #ffffff;        /* Blanco puro para tarjetas */
+    --bg-body: #f8fafc;           
+    --bg-superficie: #ffffff;     
     
-    --text-main: #334155;      /* Gris oscuro para lectura */
-    --text-muted: #64748b;     /* Gris medio para subtítulos */
+    --texto-principal: #334155;   
+    --texto-claro: #f1f5f9;       
+    --texto-gris: #64748b;
     
-    /* Estados */
-    --success: #10b981;
-    --danger: #ef4444;
-    --warning: #f59e0b;
-
-    /* Sombras y Formas */
-    --shadow-sm: 0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -1px rgba(0, 0, 0, 0.03);
-    --shadow-md: 0 10px 25px -5px rgba(0, 0, 0, 0.08), 0 8px 10px -6px rgba(0, 0, 0, 0.01);
-    --shadow-hover: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
-    --radius-card: 16px;
-    --radius-btn: 8px;
+    --sombra-suave: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+    --sombra-hover: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+    --transicion: all 0.3s ease;
+    --radius-card: 12px;
+    
+    --fuente-base: 'Inter', system-ui, -apple-system, sans-serif;
 }
 
 * {
-    box-sizing: border-box;
-    font-family: 'Inter', 'Segoe UI', Roboto, Helvetica, Arial, sans-serif; /* Tipografía limpia */
     margin: 0;
     padding: 0;
+    box-sizing: border-box;
 }
 
 body {
-    background-color: var(--bg-app);
-    color: var(--text-main);
+    font-family: var(--fuente-base);
+    background-color: var(--bg-body);
+    color: var(--texto-principal);
     line-height: 1.6;
-    overflow-x: hidden;
 }
 
-/* ==========================================
-   2. CABECERA (HERO SECTION) Y NAVEGACIÓN
-   ========================================== */
-.hero {
-    background: linear-gradient(135deg, rgba(15, 23, 42, 0.95) 0%, rgba(2, 133, 199, 0.484) 100%), 
-                url(../img/banner.jpg) center/cover no-repeat;
-    color: white;
-    padding: 20px 5% 80px 5%; /* Mucho padding abajo para que el dashboard suba */
-    min-height: 450px;
-    display: flex;
-    flex-direction: column;
+a {
+    text-decoration: none;
+    color: inherit;
 }
+
+/* =======================================================
+   2. HEADER Y NAVEGACIÓN
+======================================================= */
+.header-global { display: flex; flex-direction: column; }
 
 .navbar {
+    background-color: var(--color-primario);
+    padding: 1rem 5%;
     display: flex;
     justify-content: space-between;
     align-items: center;
-    padding-bottom: 20px;
-    border-bottom: 1px solid rgba(255, 255, 255, 0.15);
+    position: sticky;
+    top: 0;
+    z-index: 1000;
+    box-shadow: var(--sombra-suave);
 }
 
-.logo {
-    font-size: 1.4rem;
-    font-weight: 800;
-    letter-spacing: -0.5px;
-    display: flex;
-    align-items: center;
-    gap: 10px;
+.navbar-brand .logo {
+    color: var(--texto-claro);
+    font-size: 1.5rem;
+    font-weight: 700;
 }
 
-.nav-links {
-    list-style: none;
-    display: flex;
-    gap: 30px;
-}
+.navbar-brand .logo span { color: var(--color-secundario); }
 
-.nav-links a {
-    color: rgba(255, 255, 255, 0.8);
-    text-decoration: none;
-    font-size: 0.95rem;
+.nav-links { display: flex; gap: 2rem; list-style: none; }
+
+.nav-item {
+    color: var(--texto-claro);
     font-weight: 500;
-    transition: color 0.3s ease;
+    font-size: 0.95rem;
+    padding: 0.5rem 0;
+    position: relative;
+    transition: var(--transicion);
 }
 
-.nav-links a:hover {
-    color: white;
+.nav-item::after {
+    content: '';
+    position: absolute;
+    bottom: 0; left: 0;
+    width: 0%; height: 2px;
+    background-color: var(--color-secundario);
+    transition: var(--transicion);
 }
 
-.hero-content {
-    text-align: center;
-    max-width: 800px;
-    margin: auto;
-    animation: fadeInDown 0.8s ease-out;
-}
+.nav-item:hover::after { width: 100%; }
+.nav-item:hover { color: var(--bg-superficie); }
 
-@keyframes fadeInDown {
-    from { opacity: 0; transform: translateY(-20px); }
-    to { opacity: 1; transform: translateY(0); }
+.menu-toggle {
+    display: none; background: none; border: none; cursor: pointer; flex-direction: column; gap: 5px;
 }
+.menu-toggle .bar { width: 25px; height: 3px; background-color: var(--texto-claro); border-radius: 3px; }
 
-.hero-content h1 {
-    font-size: 3.5rem;
-    font-weight: 800;
-    letter-spacing: -1px;
-    margin-bottom: 15px;
-    line-height: 1.2;
+/* BANNER */
+.banner-hero {
+    position: relative; height: 180px; display: flex; align-items: center; justify-content: center; overflow: hidden;
 }
-
-.hero-content p {
-    color: #e2e8f0;
-    font-size: 1.1rem;
-    margin-bottom: 35px;
+.banner-bg { position: absolute; width: 100%; height: 100%; object-fit: cover; z-index: 1; }
+.banner-overlay {
+    position: absolute; width: 100%; height: 100%;
+    background: linear-gradient(to right, rgba(30, 41, 59, 0.85), rgba(30, 41, 59, 0.4)); z-index: 2;
 }
+.banner-content { position: relative; z-index: 3; text-align: center; color: var(--texto-claro); }
+.banner-content h1 { font-size: 2rem; font-weight: 800; margin-bottom: 0.2rem; }
+.banner-content p { font-size: 1rem; opacity: 0.9; }
 
-.hero-buttons {
-    display: flex;
-    gap: 15px;
-    justify-content: center;
-}
-
-/* ==========================================
-   3. BOTONES MODERNOS
-   ========================================== */
-.btn-primary, .btn-outline {
-    padding: 12px 28px;
-    border-radius: var(--radius-btn);
-    font-size: 1rem;
-    font-weight: 600;
-    cursor: pointer;
-    text-decoration: none;
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    gap: 10px;
-    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-    border: none;
-}
-
-.btn-primary {
-    background-color: var(--primary);
-    color: white;
-    box-shadow: 0 4px 14px rgba(2, 132, 199, 0.3);
-}
-
-.btn-primary:hover {
-    background-color: #0369a1;
-    transform: translateY(-2px);
-    box-shadow: 0 6px 20px rgba(2, 132, 199, 0.4);
-}
-
-.btn-outline {
-    background-color: transparent;
-    color: white;
-    border: 2px solid rgba(255, 255, 255, 0.3);
-}
-
-.btn-outline:hover {
-    border-color: white;
-    background-color: rgba(255, 255, 255, 0.1);
-}
-
-/* ==========================================
-   4. CONTENEDOR DASHBOARD Y TARJETAS GLOBALES
-   ========================================== */
+/* =======================================================
+   3. DASHBOARD MAIN CONTAINER
+======================================================= */
 .dashboard-container {
-    max-width: 1280px;
-    margin: -60px auto 60px auto; /* Flota sobre el Hero */
+    max-width: 1200px;
+    margin: 2rem auto;
     padding: 0 20px;
     display: flex;
     flex-direction: column;
-    gap: 30px;
-    position: relative;
-    z-index: 10;
+    gap: 1.5rem;
 }
 
-.card {
-    background: var(--card-bg);
+/* =======================================================
+   4. SECCIÓN DE FILTROS Y NAVEGACIÓN (Tarjetas top)
+======================================================= */
+/* Filtro */
+.filtro-dashboard-card {
+    background-color: var(--bg-superficie);
+    padding: 1.5rem;
     border-radius: var(--radius-card);
-    box-shadow: var(--shadow-md);
-    padding: 24px;
-    border: 1px solid rgba(0,0,0,0.02);
-}
-
-.card-header {
+    box-shadow: var(--sombra-suave);
     display: flex;
     justify-content: space-between;
     align-items: center;
-    margin-bottom: 20px;
-    padding-bottom: 15px;
-    border-bottom: 1px solid #f1f5f9;
+    border: 1px solid #e2e8f0;
+}
+.filtro-dashboard-text h2 { font-size: 1.2rem; color: var(--color-primario); margin-bottom: 5px; }
+.filtro-dashboard-text p { color: var(--texto-gris); font-size: 0.9rem; }
+.filtro-dashboard-select {
+    padding: 0.6rem 1rem;
+    border-radius: 8px;
+    border: 1px solid #cbd5e1;
+    font-size: 1rem;
+    outline: none;
+    cursor: pointer;
+    background-color: var(--bg-body);
 }
 
-.card-header h3 {
-    margin: 0;
-    font-size: 1.2rem;
-    color: var(--primary-dark);
-    font-weight: 700;
-}
-
-/* ==========================================
-   5. TARJETAS DE NAVEGACIÓN RÁPIDA
-   ========================================== */
+/* Tarjetas de Navegación */
 .nav-cards {
     display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 25px;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 1.5rem;
 }
-
 .nav-card {
-    background: var(--card-bg);
+    background: var(--bg-superficie);
     border-radius: var(--radius-card);
-    box-shadow: var(--shadow-md);
-    padding: 24px;
+    padding: 1.5rem;
     display: flex;
     align-items: center;
-    gap: 20px;
-    cursor: pointer;
-    text-decoration: none;
-    color: inherit;
-    transition: all 0.3s ease;
-    border: 1px solid transparent;
+    box-shadow: var(--sombra-suave);
+    border: 1px solid #e2e8f0;
+    transition: var(--transicion);
 }
-
 .nav-card:hover {
-    transform: translateY(-5px);
-    box-shadow: var(--shadow-hover);
-    border-color: var(--primary-light);
+    transform: translateY(-3px);
+    box-shadow: var(--sombra-hover);
+    border-color: var(--color-secundario);
 }
+.nav-card-text { flex-grow: 1; }
+.nav-card-text h3 { font-size: 1.1rem; color: var(--color-primario); }
+.nav-card-text p { font-size: 0.85rem; color: var(--texto-gris); margin-top: 3px; }
+.nav-card .arrow { color: #cbd5e1; font-size: 1.2rem; }
 
+/* Cajas de Iconos */
 .icon-box {
-    width: 60px;
-    height: 60px;
-    border-radius: 14px;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    font-size: 1.8rem;
-    flex-shrink: 0;
+    width: 50px; height: 50px;
+    border-radius: 12px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 1.4rem; color: white;
+    margin-right: 1rem;
 }
 
-.bg-blue { background: var(--primary-light); color: var(--primary); }
-.bg-teal { background: #ccfbf1; color: #0d9488; }
-
-.nav-card-text h3 { margin: 0 0 5px 0; font-size: 1.2rem; color: var(--primary-dark); }
-.nav-card-text p { margin: 0; font-size: 0.9rem; color: var(--text-muted); }
-.arrow { margin-left: auto; color: #cbd5e1; font-size: 1.2rem; transition: transform 0.3s; }
-.nav-card:hover .arrow { transform: translateX(5px); color: var(--primary); }
-
-/* ==========================================
-   6. CUADRÍCULA DE KPIs (INDICADORES)
-   ========================================== */
+/* =======================================================
+   5. TARJETAS KPI (Métricas numéricas)
+======================================================= */
 .kpi-grid {
     display: grid;
-    grid-template-columns: repeat(3, 1fr); /* ANTES ERA 4 */
-    gap: 20px;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 1.5rem;
 }
 .kpi-card {
-    background: var(--card-bg);
+    background-color: var(--bg-superficie);
+    padding: 1.5rem;
     border-radius: var(--radius-card);
-    box-shadow: var(--shadow-sm);
-    padding: 24px;
-    border-top: 4px solid var(--primary);
-    transition: transform 0.3s ease;
+    box-shadow: var(--sombra-suave);
+    border: 1px solid #e2e8f0;
 }
-
-.kpi-card:hover { transform: translateY(-3px); box-shadow: var(--shadow-md); }
-
-/* Colores de bordes superiores para KPIs */
-.kpi-card:nth-child(2) { border-top-color: var(--success); }
-.kpi-card:nth-child(3) { border-top-color: var(--warning); }
-.kpi-card:nth-child(4) { border-top-color: #8b5cf6; } /* Morado */
-
 .kpi-header {
     display: flex;
     justify-content: space-between;
+    align-items: center;
     font-size: 0.85rem;
     font-weight: 700;
-    color: var(--text-muted);
-    text-transform: uppercase;
-    letter-spacing: 0.5px;
+    color: var(--texto-gris);
+    margin-bottom: 0.8rem;
 }
+.kpi-card h2 { font-size: 2.5rem; font-weight: 800; color: var(--color-primario); line-height: 1; margin-bottom: 0.5rem; }
 
-.kpi-card h2 {
-    margin: 15px 0 5px 0;
-    font-size: 2.2rem;
-    font-weight: 800;
-    color: var(--primary-dark);
-    letter-spacing: -1px;
-}
-
-.text-green { color: var(--success) !important; }
-
-/* ==========================================
-   7. SECCIÓN PRINCIPAL (MAPA Y WIDGETS)
-   ========================================== */
+/* =======================================================
+   6. GRID PRINCIPAL (Mapa y Widgets Laterales)
+======================================================= */
 .main-grid {
     display: grid;
-    grid-template-columns: 2.5fr 1fr;
-    gap: 25px;
+    grid-template-columns: 2fr 1fr; /* El mapa ocupa el doble que los widgets */
+    gap: 1.5rem;
+    margin-bottom: 2rem;
 }
 
-.side-widgets {
-    display: flex;
-    flex-direction: column;
-    gap: 25px;
+.card {
+    background-color: var(--bg-superficie);
+    border-radius: var(--radius-card);
+    box-shadow: var(--sombra-suave);
+    border: 1px solid #e2e8f0;
+    padding: 1.5rem;
+    margin-bottom: 1.5rem;
 }
+.card-header h3 { font-size: 1.1rem; color: var(--color-primario); border-bottom: 1px solid #e2e8f0; padding-bottom: 10px; margin-bottom: 15px; }
 
-/* Mini Mapa Leaflet */
+/* Mapa */
 .map-container {
     height: 450px;
-    border-radius: 12px;
-    z-index: 1;
-    border: 1px solid #e2e8f0;
+    width: 100%;
+    background-color: #e2e8f0; /* Color temporal mientras carga Leaflet */
+    z-index: 1; /* Para evitar problemas de superposición con el navbar */
 }
 
 /* Barras de Progreso (Provincias) */
-.progress-bar { margin-bottom: 20px; }
-.progress-label { display: flex; justify-content: space-between; font-size: 0.9rem; margin-bottom: 8px; font-weight: 600; color: var(--text-main); }
-.track { height: 10px; background: #f1f5f9; border-radius: 5px; overflow: hidden; }
-.fill { height: 100%; border-radius: 5px; transition: width 1s ease-in-out; }
-.bg-purple { background: #8b5cf6; }
-.bg-yellow { background: var(--warning); }
+.progress-bar { margin-bottom: 1.2rem; }
+.progress-label { display: flex; justify-content: space-between; font-size: 0.9rem; font-weight: 600; color: var(--texto-principal); margin-bottom: 5px; }
+.track { background-color: #f1f5f9; height: 8px; border-radius: 4px; overflow: hidden; }
+.fill { height: 100%; border-radius: 4px; transition: width 0.8s ease; }
 
-/* Gráfico Circular */
-.chart-container { position: relative; height: 220px; width: 100%; display: flex; justify-content: center; margin-top: 10px;}
+/* Gráfico de dona */
+.chart-container { position: relative; height: 220px; width: 100%; display: flex; justify-content: center;}
 
-/* ==========================================
-   8. VENTANA MODAL (SOBRE EL MAPA)
-   ========================================== */
+/* =======================================================
+   7. MODAL (Detalle de Obra)
+======================================================= */
 .modal-overlay {
-    display: none; 
-    position: fixed !important;
-    z-index: 999999 !important; 
-    left: 0; top: 0; width: 100%; height: 100%;
-    background-color: rgba(15, 23, 42, 0.7);
-    backdrop-filter: blur(5px);
-    align-items: center; justify-content: center;
+    display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+    background-color: rgba(15, 23, 42, 0.6); backdrop-filter: blur(4px);
+    z-index: 2000; justify-content: center; align-items: center;
 }
-
 .modal-contenido {
-    background-color: var(--card-bg);
-    border-radius: var(--radius-card); 
-    padding: 30px;
-    width: 90%; max-width: 500px;
-    box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
-    position: relative;
-    animation: scaleUp 0.3s cubic-bezier(0.16, 1, 0.3, 1);
-}
-
-@keyframes scaleUp {
-    from { transform: scale(0.95); opacity: 0; }
-    to { transform: scale(1); opacity: 1; }
-}
-
-.modal-cerrar {
-    position: absolute; top: 20px; right: 25px;
-    color: #94a3b8; font-size: 24px; font-weight: bold;
-    cursor: pointer; transition: color 0.2s;
-}
-.modal-cerrar:hover { color: var(--danger); }
-
-.texto-principal { color: var(--primary-dark); font-size: 1.3rem; margin: 15px 0 5px 0; font-weight: 800;}
-.texto-secundario { color: var(--text-muted); font-size: 0.95rem; border-bottom: 1px solid #f1f5f9; padding-bottom: 15px; margin-bottom: 15px;}
-.etiqueta-estado { display: inline-block; padding: 6px 12px; border-radius: 20px; font-size: 0.75rem; font-weight: 700; text-transform: uppercase; background-color: var(--primary-light); color: var(--primary); }
-
-.modal-cuerpo { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
-.dato-bloque { display: flex; flex-direction: column; background: #f8fafc; padding: 12px; border-radius: 8px;}
-.dato-etiqueta { font-size: 0.75rem; color: #64748b; text-transform: uppercase; letter-spacing: 0.5px; font-weight: 600; margin-bottom: 4px;}
-.dato-valor { font-size: 0.95rem; color: var(--text-main); font-weight: 600; }
-.resaltado { font-size: 1.2rem; color: var(--success); font-weight: 800; }
-
-.custom-pin { background: transparent; border: none; }
-
-/* ==========================================
-   9. MEDIA QUERIES (DISEÑO RESPONSIVO)
-   ========================================== */
-
-/* Tablets */
-@media (max-width: 1024px) {
-    .main-grid { grid-template-columns: 1fr; } /* El mapa y Wdigets se apilan */
-    .kpi-grid { grid-template-columns: repeat(2, 1fr); } /* KPIs en 2 filas de 2 */
-}
-
-/* Celulares Grandes */
-@media (max-width: 768px) {
-    .hero { padding-bottom: 100px; }
-    .hero-content h1 { font-size: 2.5rem; }
-    .nav-cards { grid-template-columns: 1fr; } /* Tarjetas de nav 1 columna */
-    .nav-links { display: none; } /* Ocultar menú en celular para simplificar */
-    .hero-buttons { flex-direction: column; }
-}
-
-/* Celulares Pequeños */
-@media (max-width: 480px) {
-    .kpi-grid { grid-template-columns: 1fr; } /* KPIs en 1 columna */
-    .dashboard-container { margin-top: -80px; }
-    .modal-cuerpo { grid-template-columns: 1fr; } /* El modal a 1 columna */
-}
-
-/* ==========================================
-   NUEVO: TARJETA DE FILTRO PRINCIPAL
-   ========================================== */
-.filtro-dashboard-card {
-    background: linear-gradient(135deg, var(--primary-dark) 0%, var(--primary) 100%);
+    background-color: var(--bg-superficie);
+    width: 90%; max-width: 450px;
     border-radius: var(--radius-card);
-    padding: 25px 30px;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    box-shadow: var(--shadow-md);
-    color: white;
+    padding: 2rem; position: relative;
+    box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1);
+}
+.modal-cerrar {
+    position: absolute; top: 15px; right: 20px;
+    font-size: 1.8rem; cursor: pointer; color: var(--texto-gris); transition: var(--transicion);
+}
+.modal-cerrar:hover { color: #ef4444; }
+.modal-cabecera { margin-bottom: 1.5rem; }
+.etiqueta-estado { display: inline-block; padding: 4px 10px; border-radius: 20px; font-size: 0.8rem; font-weight: 600; background: #e0e7ff; color: #4338ca; margin-bottom: 10px; }
+.texto-principal { font-size: 1.3rem; color: var(--color-primario); margin-bottom: 5px; line-height: 1.3; }
+.texto-secundario { font-size: 0.9rem; color: var(--texto-gris); }
+.modal-cuerpo { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+.dato-bloque { background-color: var(--bg-body); padding: 12px; border-radius: 8px; display: flex; flex-direction: column; }
+.dato-etiqueta { font-size: 0.8rem; color: var(--texto-gris); margin-bottom: 4px; }
+.dato-valor { font-size: 1rem; font-weight: 700; color: var(--color-primario); }
+.btn-primary { display: block; text-align: center; background-color: var(--color-secundario); color: white; padding: 12px; border-radius: 8px; font-weight: 600; transition: var(--transicion); border: none; cursor: pointer; }
+.btn-primary:hover { background-color: #2563eb; }
+
+/* =======================================================
+   8. CLASES UTILITARIAS DE COLORES
+======================================================= */
+.bg-blue { background-color: #3b82f6; }
+.bg-teal { background-color: #14b8a6; }
+.bg-purple { background-color: #8b5cf6; }
+.bg-yellow { background-color: #f59e0b; }
+.text-green { color: #10b981 !important; }
+
+/* =======================================================
+   9. DISEÑO RESPONSIVO (Tablets y Móviles)
+======================================================= */
+@media screen and (max-width: 992px) {
+    .main-grid { grid-template-columns: 1fr; } /* El mapa y widgets se apilan */
 }
 
-.filtro-dashboard-text h2 { 
-    margin: 0 0 5px 0; 
-    font-size: 1.6rem; 
-    color: white; 
-    font-weight: 800;
-}
-
-.filtro-dashboard-text p { 
-    margin: 0; 
-    color: var(--primary-light); 
-    font-size: 0.95rem; 
-}
-
-.filtro-dashboard-select {
-    padding: 12px 25px;
-    font-size: 1.1rem;
-    border-radius: 8px;
-    border: none;
-    font-weight: bold;
-    color: var(--primary-dark);
-    cursor: pointer;
-    box-shadow: 0 4px 15px rgba(0,0,0,0.2);
-    outline: none;
-    transition: transform 0.2s;
-}
-
-.filtro-dashboard-select:hover {
-    transform: scale(1.02);
-}
-
-@media (max-width: 768px) {
-    .filtro-dashboard-card { flex-direction: column; text-align: center; gap: 15px; }
-    .filtro-dashboard-select { width: 100%; }
+@media screen and (max-width: 768px) {
+    .menu-toggle { display: flex; }
+    .nav-links {
+        position: absolute; top: 100%; right: -100%; width: 250px; height: 100vh;
+        background-color: var(--color-primario); flex-direction: column; align-items: center;
+        padding-top: 2rem; transition: right 0.4s ease; box-shadow: -5px 0 15px rgba(0,0,0,0.1); gap: 1rem;
+    }
+    .nav-links.active { right: 0; }
+    .filtro-dashboard-card { flex-direction: column; align-items: stretch; gap: 15px; text-align: center; }
+    .nav-cards { grid-template-columns: 1fr; }
 }

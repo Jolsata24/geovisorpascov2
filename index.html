@@ -14,27 +14,36 @@
 </head>
 <body>
 
-    <header class="hero">
-        <nav class="navbar">
-            <div class="logo">
-                <i class="fa-solid fa-shield-halved"></i> Pasco Transparente
-            </div>
-            <ul class="nav-links">
-                <li><a href="index.html" style="color: white; font-weight: bold; border-bottom: 2px solid white; padding-bottom: 5px;">Inicio</a></li>
-                <li><a href="mapa.html">Mapa Obras</a></li>
-                <li><a href="explorar.html">Directorio</a></li>
-            </ul>
-        </nav>
-        
-        <div class="hero-content">
-            <h1>Observatorio de Obras Públicas</h1>
-            <p>Monitoreo ciudadano en tiempo real de la ejecución presupuestal y avance físico de los proyectos de inversión en la Región Pasco.</p>
-            <div class="hero-buttons">
-                <a href="mapa.html" class="btn-primary"><i class="fa-solid fa-map-location-dot"></i> Ver Mapa Interactivo</a>
-                <a href="explorar.html" class="btn-outline"><i class="fa-solid fa-magnifying-glass"></i> Buscar Obras</a>
-            </div>
+    <header class="header-global">
+    <!-- Barra de Navegación -->
+    <nav class="navbar">
+        <div class="navbar-brand">
+            <a href="index.html" class="logo">GeoVisor <span>Pasco</span></a>
         </div>
-    </header>
+        
+        <button class="menu-toggle" id="menu-toggle" aria-label="Abrir menú">
+            <span class="bar"></span>
+            <span class="bar"></span>
+            <span class="bar"></span>
+        </button>
+
+        <ul class="nav-links" id="nav-links">
+            <li><a href="index.html" class="nav-item">Inicio</a></li>
+            <li><a href="mapa.html" class="nav-item">Mapa Interactivo</a></li>
+            <li><a href="explorar.html" class="nav-item">Explorar Obras</a></li>
+        </ul>
+    </nav>
+
+    <!-- Banner Global con la imagen -->
+    <div class="banner-hero">
+        <img src="img/banner.jpg" alt="Banner del proyecto" class="banner-bg">
+        <div class="banner-overlay"></div>
+        <div class="banner-content">
+            <h1 id="banner-title">Sistema de Información Geográfica</h1>
+            <p id="banner-subtitle">Monitoreo y consulta de obras</p>
+        </div>
+    </div>
+</header>
 
     <main class="dashboard-container">
 
