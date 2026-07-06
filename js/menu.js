@@ -225,3 +225,49 @@ document.addEventListener('DOMContentLoaded', () => {
             console.error("Error cargando JSON en Dashboard:", err);
         });
 });
+
+// ==========================================
+// LÓGICA DEL PRELOADER GLOBAL
+// ==========================================
+window.addEventListener('load', () => {
+    const preloader = document.getElementById('preloader');
+    if (preloader) {
+        // Agrega un pequeñísimo retraso (opcional) para que se aprecie la animación
+        setTimeout(() => {
+            preloader.classList.add('preloader-oculto');
+        }, 300); // 300 milisegundos
+    }
+});
+
+// ==========================================
+// LÓGICA DEL MODAL DE BIENVENIDA (Solo en Inicio)
+// ==========================================
+window.addEventListener('load', () => {
+    const modalBienvenida = document.getElementById('modalBienvenida');
+    const btnCerrarBienvenida = document.getElementById('cerrarBienvenida');
+    const btnEntendido = document.getElementById('btnEntendido');
+
+    if (modalBienvenida) {
+        // Hacemos que el modal aparezca 800 milisegundos después de cargar la página 
+        // (así le damos tiempo al preloader de desaparecer primero)
+        setTimeout(() => {
+            modalBienvenida.style.display = 'flex';
+        }, 800);
+
+        // Función para cerrar el modal
+        const cerrarModalBienvenida = () => {
+            modalBienvenida.style.display = 'none';
+        };
+
+        // Cerramos si hacen clic en la "X" o en el botón "¡Entendido!"
+        if (btnCerrarBienvenida) btnCerrarBienvenida.addEventListener('click', cerrarModalBienvenida);
+        if (btnEntendido) btnEntendido.addEventListener('click', cerrarModalBienvenida);
+
+        // También cerramos si hacen clic en la zona oscura fuera de la tarjeta blanca
+        window.addEventListener('click', (e) => {
+            if (e.target === modalBienvenida) {
+                cerrarModalBienvenida();
+            }
+        });
+    }
+});

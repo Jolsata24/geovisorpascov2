@@ -112,3 +112,16 @@ document.addEventListener('DOMContentLoaded', async function() {
         console.error("Error cargando los datos:", error);
     }
 });
+
+// ==========================================
+// LÓGICA DEL PRELOADER GLOBAL
+// ==========================================
+window.addEventListener('load', () => {
+    const preloader = document.getElementById('preloader');
+    if (preloader) {
+        // Agrega un pequeñísimo retraso (opcional) para que se aprecie la animación
+        setTimeout(() => {
+            preloader.classList.add('preloader-oculto');
+        }, 300); // 300 milisegundos
+    }
+});

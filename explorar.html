@@ -6,21 +6,34 @@
     <title>Explorar Obras - Pasco Transparente</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link rel="stylesheet" href="styles/estilos_explorar.css">
+    <link rel="icon" type="image/png" href="img/logo02.png">
 </head>
 <body class="bg-light">
-
-    <header class="hero hero-small">
+    <div id="preloader">
+        <div class="preloader-content">
+            <img src="img/logo02.png" alt="Cargando Pasco Transparente" class="preloader-logo">
+            <div class="spinner"></div>
+        </div>
+    </div>
+    <header class="header-global">
         <nav class="navbar">
-            <a href="index.html" class="logo">GeoVisor <span>Pasco</span></a>
-            <ul class="nav-links">
-                <li><a href="index.html">Observatorio</a></li>
-                <li><a href="explorar.html" class="active-link">Proyectos</a></li>
-                <li><a href="mapa.html">Mapa</a></li>
-            </ul>
+            <a href="index.html" class="logo" style="text-decoration:none;">
+    <img src="img/logo02.png" alt="Logo Pasco Transparente" class="logo-img">GeoVisor Pasco
+</a>
+            <ul class="nav-links" id="nav-links">
+            <li><a href="index.html" class="nav-item">Inicio</a></li>
+            <li><a href="mapa.html" class="nav-item">Mapa Interactivo</a></li>
+            <li><a href="explorar.html" class="nav-item">Explorar Obras</a></li>
+        </ul>
         </nav>
-        <div class="hero-content hero-content-small">
-            <h1>Directorio de Proyectos</h1>
-            <p>Busca y filtra el estado detallado de todas las obras públicas en la región.</p>
+
+        <div class="banner-hero">
+            <img src="img/banner.jpg" alt="Fondo de obras" class="banner-bg">
+            <div class="banner-overlay"></div>
+            <div class="banner-content">
+                <h1>Directorio de Proyectos</h1>
+                <p>Busca y filtra el estado detallado de todas las obras públicas en la región.</p>
+            </div>
         </div>
     </header>
 
@@ -88,6 +101,9 @@
             </div>
             
             <div id="contenedorObras" class="obras-grid"></div>
+            <div id="contenedorObras" class="obras-grid"></div>
+            
+            <div id="paginacionContainer" class="paginacion-container"></div>
         </section>
 
     </main>

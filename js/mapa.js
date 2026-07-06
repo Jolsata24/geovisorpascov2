@@ -211,3 +211,16 @@ document.addEventListener('DOMContentLoaded', () => {
         })
         .catch(err => console.error("Error cargando JSON del Mapa:", err));
 });
+
+// ==========================================
+// LÓGICA DEL PRELOADER GLOBAL
+// ==========================================
+window.addEventListener('load', () => {
+    const preloader = document.getElementById('preloader');
+    if (preloader) {
+        // Agrega un pequeñísimo retraso (opcional) para que se aprecie la animación
+        setTimeout(() => {
+            preloader.classList.add('preloader-oculto');
+        }, 300); // 300 milisegundos
+    }
+});
