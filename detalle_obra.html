@@ -6,6 +6,9 @@
     <title>Detalle de Obra - Pasco Transparente</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link rel="stylesheet" href="styles/estilos_detalle.css">
+    <!-- Estilos principales y del menú -->
+    <link rel="stylesheet" href="styles/estilos_main.css">
+    <link rel="stylesheet" href="styles/menu.css">
     <link rel="icon" type="image/png" href="img/logo02.png">
 </head>
 <body class="bg-light">
@@ -15,16 +18,31 @@
             <div class="spinner"></div>
         </div>
     </div>
+    <!-- 1. BOTÓN HAMBURGUESA FLOTANTE -->
+    <button id="btn-menu" class="btn-hamburguesa">
+        <span class="linea"></span>
+        <span class="linea"></span>
+        <span class="linea"></span>
+    </button>
+
+    <!-- 2. MENÚ LATERAL OCULTO -->
+    <nav id="menu-lateral" class="menu-lateral">
+        <ul class="lista-menu">
+            <li><a href="index.html">Inicio</a></li>
+            <li><a href="mapa.html">Mapa</a></li>
+            <li><a href="explorar.html">Explorar</a></li>
+        </ul>
+    </nav>
     <header class="header-global">
         <nav class="navbar">
             <a href="index.html" class="logo" style="text-decoration:none;">
     <img src="img/logo02.png" alt="Logo Pasco Transparente" class="logo-img">GeoVisor Pasco
 </a>
-            <ul class="nav-links" id="nav-links">
-            <li><a href="index.html" class="nav-item">Inicio</a></li>
-            <li><a href="mapa.html" class="nav-item">Mapa Interactivo</a></li>
-            <li><a href="explorar.html" class="nav-item">Explorar Obras</a></li>
-        </ul>
+            <ul class="nav-links-desktop">
+                <li><a href="index.html">Inicio</a></li>
+                <li><a href="mapa.html">Mapa Interactivo</a></li>
+                <li><a href="explorar.html">Explorar Obras</a></li>
+            </ul>
         </nav>
 
         <div class="banner-hero">
@@ -76,5 +94,6 @@
     </main>
 
     <script src="js/detalle.js?v=3"></script>
+    <script src="js/menu.js"></script>
 </body>
 </html>

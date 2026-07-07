@@ -473,78 +473,117 @@ body {
 }
 
 /* ==========================================================================
-   12. BARRA DE NAVEGACIÓN Y CONTROL RESPONSIVO (CORRECCIÓN)
+   BARRA DE NAVEGACIÓN Y RESPONSIVIDAD ESTRICTA
    ========================================================================== */
 
-/* Contenedor principal de la barra */
 .navbar {
     display: flex !important;
     justify-content: space-between !important;
     align-items: center !important;
-    padding: 15px 40px;
-    background-color: var(--color-primario);
-    width: 100%;
-    box-sizing: border-box;
-    position: relative;
-    z-index: 100;
-    display: flex;
-    align-items: center;
+    padding: 15px 40px !important;
+    background-color: #0f172a !important;
+    width: 100% !important;
+    box-sizing: border-box !important;
 }
 
-/* Forzamos que los enlaces sean horizontales y blancos */
+.navbar-brand .logo {
+    display: flex !important;
+    align-items: center !important;
+    color: white !important;
+    text-decoration: none !important;
+    font-size: 1.5rem !important;
+    font-weight: bold !important;
+}
+
+.logo-img {
+    width: 40px !important;
+    margin-right: 10px !important;
+}
+
 .nav-links-desktop {
     display: flex !important;
     flex-direction: row !important;
     list-style: none !important;
-    gap: 30px;
-    margin: 0;
-    padding: 0;
+    gap: 30px !important;
+    margin: 0 !important;
+    padding: 0 !important;
 }
 
 .nav-links-desktop li a {
     color: white !important;
     text-decoration: none !important;
-    font-size: 1.05rem;
-    font-weight: 500;
-    transition: color 0.3s ease;
-}
-
-.nav-links-desktop li a:hover {
-    color: var(--color-secundario) !important;
+    font-size: 1.05rem !important;
+    font-weight: 500 !important;
+    transition: color 0.3s ease !important;
 }
 
 /* =========================================
-   MEDIA QUERIES (El cerebro responsivo)
+   MEDIA QUERIES (Monitor vs Celular)
    ========================================= */
 
-/* MONITOR (Pantallas de computadora) */
+/* MONITOR (Más de 992px) */
 @media (min-width: 993px) {
-    /* Escondemos el menú de celular */
     .btn-hamburguesa { 
-        display: none !important; 
+        display: none !important; /* Oculta botón flotante en PC */
     }
     .menu-lateral { 
         display: none !important; 
     }
-    /* Mostramos los enlaces horizontales */
     .nav-links-desktop { 
-        display: flex !important; 
+        display: flex !important; /* Muestra enlaces horizontales */
     }
 }
 
-/* CELULAR Y TABLET (Pantallas pequeñas) */
+/* CELULAR Y TABLET (Menos de 992px) */
 @media (max-width: 992px) {
-    /* Escondemos los enlaces horizontales */
     .nav-links-desktop { 
         display: none !important; 
     }
-    /* Mostramos el botón hamburguesa */
     .btn-hamburguesa { 
         display: flex !important; 
     }
-    /* Centramos un poco el logo para que no choque con el botón */
     .navbar-brand { 
-        padding: 0 !important;
-    margin: 0 !important;
+        margin-left: 0 !important; /* Quitamos el margen izquierdo */
+        margin-right: 60px !important; /* Protegemos el logo para que el botón derecho no lo tape */
+    }
+}
+/* ==========================================================================
+   13. SELLO DE FUENTE DE DATOS (Aviso de Responsabilidad)
+   ========================================================================== */
+.sello-fuente-datos {
+    background-color: #f8fafc; /* Gris muy claro y limpio */
+    border-left: 4px solid var(--color-secundario); /* Línea azul institucional */
+    border-radius: var(--radius-card); /* Usa tu variable de bordes redondos */
+    padding: 15px 20px;
+    margin: 25px 0; /* Da un respiro al diseño */
+    display: flex;
+    align-items: center; /* Centra el ícono con el texto */
+    gap: 15px; /* Espacio entre el ícono y el texto */
+    box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+}
+
+.sello-fuente-datos i {
+    color: var(--color-secundario); /* Ícono azul */
+    font-size: 1.8rem;
+}
+
+.sello-fuente-datos p {
+    margin: 0;
+    color: var(--texto-secundario);
+    font-size: 0.95rem;
+    line-height: 1.5;
+}
+
+.sello-fuente-datos strong {
+    color: var(--texto-principal);
+    font-weight: 600;
+}
+
+/* Responsivo para celulares: centrar todo si la pantalla es pequeña */
+@media (max-width: 768px) {
+    .sello-fuente-datos {
+        flex-direction: column;
+        text-align: center;
+        padding: 20px 15px;
     }
 }

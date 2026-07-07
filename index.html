@@ -25,14 +25,14 @@
         </div>
     </div>
 
-    <!-- Botón del menú hamburguesa -->
+    <!-- 1. BOTÓN HAMBURGUESA FLOTANTE (Izquierda) -->
     <button id="btn-menu" class="btn-hamburguesa">
         <span class="linea"></span>
         <span class="linea"></span>
         <span class="linea"></span>
     </button>
 
-    <!-- El menú lateral sigue estando fuera (eso es correcto) -->
+    <!-- 2. MENÚ LATERAL OCULTO -->
     <nav id="menu-lateral" class="menu-lateral">
         <ul class="lista-menu">
             <li><a href="index.html">Inicio</a></li>
@@ -41,26 +41,17 @@
         </ul>
     </nav>
 
+    <!-- 3. HEADER Y BARRA DE NAVEGACIÓN (Desktop) -->
     <header class="header-global">
-        <!-- Barra de Navegación -->
         <nav class="navbar">
-            
-            <!-- Grupo Izquierdo: Botón Hamburguesa + Logo -->
-            <div class="navbar-left">
-                <button id="btn-menu" class="btn-hamburguesa">
-                    <span class="linea"></span>
-                    <span class="linea"></span>
-                    <span class="linea"></span>
-                </button>
-                
-                <div class="navbar-brand">
-                    <a href="index.html" class="logo" style="text-decoration:none;">
-                        <img src="img/logo02.png" alt="Logo Pasco Transparente" class="logo-img">GeoVisor Pasco
-                    </a>
-                </div>
+            <!-- Logo -->
+            <div class="navbar-brand">
+                <a href="index.html" class="logo" style="text-decoration:none;">
+                    <img src="img/logo02.png" alt="Logo Pasco Transparente" class="logo-img">GeoVisor Pasco
+                </a>
             </div>
             
-            <!-- Grupo Derecho: ENLACES HORIZONTALES (PC) -->
+            <!-- Enlaces Horizontales -->
             <ul class="nav-links-desktop">
                 <li><a href="index.html">Inicio</a></li>
                 <li><a href="mapa.html">Mapa Interactivo</a></li>
@@ -68,7 +59,7 @@
             </ul>
         </nav>
         
-        <!-- Banner Global con la imagen -->
+        <!-- Banner Global -->
         <div class="banner-hero">
             <img src="img/banner.jpg" alt="Banner del proyecto" class="banner-bg">
             <div class="banner-overlay"></div>
@@ -134,7 +125,15 @@
                 <small style="color: #64748b; font-weight: 500;">Obras finalizadas o liquidadas</small>
             </div>
         </div>
-
+        <!-- ================= SELLO DE FUENTE DE DATOS ================= -->
+<div class="sello-fuente-datos">
+    <i class="fa-solid fa-shield-halved"></i>
+    <p>
+        <strong>Fuente de datos:</strong> Infobras (Junio 2026). 
+        La exactitud de los datos depende exclusivamente de las entidades públicas responsables de su actualización.
+    </p>
+</div>
+<!-- ============================================================ -->
         <!-- Main Grid -->
         <div class="main-grid">
             <div class="card" style="padding: 0; overflow: hidden; display: flex; flex-direction: column;">
@@ -169,34 +168,6 @@
         </div>
     </main>
 
-    <!-- ================= MODAL DE OBRAS ================= -->
-    <div id="modalObras" class="modal-overlay">
-        <div class="modal-contenido">
-            <span class="modal-cerrar">&times;</span>
-            <div class="modal-cabecera">
-                <span id="modal-estado" class="etiqueta-estado">Estado</span>
-                <h2 id="modal-titulo" class="texto-principal">Nombre de la obra</h2>
-                <p id="modal-entidad" class="texto-secundario"><i class="fa-solid fa-building-columns"></i> Entidad Pública</p>
-            </div>
-            <div class="modal-cuerpo">
-                <div class="dato-bloque">
-                    <span class="dato-etiqueta">Avance Físico</span>
-                    <span id="modal-avance" class="dato-valor resaltado">0%</span>
-                </div>
-                <div class="dato-bloque">
-                    <span class="dato-etiqueta">Presupuesto</span>
-                    <span id="modal-monto" class="dato-valor">S/ 0.00</span>
-                </div>
-                <div class="dato-bloque" style="grid-column: 1 / -1;">
-                    <span class="dato-etiqueta">Ubicación</span>
-                    <span id="modal-ubicacion" class="dato-valor">Distrito, Provincia</span>
-                </div>
-                <div class="dato-bloque" style="grid-column: 1 / -1; background: transparent; padding: 0;">
-                    <a id="modal-enlace-mef" href="#" class="btn-primary" style="width: 100%;">Ver ficha detallada</a>
-                </div>
-            </div>
-        </div>
-    </div>
 
     <!-- ================= MODAL INFORMATIVO DE BIENVENIDA ================= -->
     <!-- Movidi aquí, DENTRO del body -->
