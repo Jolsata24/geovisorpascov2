@@ -271,3 +271,89 @@ window.addEventListener('load', () => {
         });
     }
 });
+
+document.addEventListener('DOMContentLoaded', function() {
+    // 1. Seleccionamos los elementos clave del DOM
+    const menuToggle = document.querySelector('.menu-toggle');
+    const navLinks = document.querySelector('.nav-links');
+    const links = document.querySelectorAll('.nav-links li a');
+
+    // Verificamos que los elementos existan en la página actual para evitar errores en consola
+    if (menuToggle && navLinks) {
+        
+        // 2. Abrir/Cerrar menú al hacer clic en el botón de hamburguesa
+        menuToggle.addEventListener('click', function(event) {
+            event.stopPropagation(); // Evita que el clic cierre el menú inmediatamente
+            navLinks.classList.toggle('active');
+            menuToggle.classList.toggle('active'); // Útil si luego quieres animar el icono a una "X"
+        });
+
+        // 3. Cerrar el menú automáticamente al hacer clic en un enlace
+        links.forEach(link => {
+            link.addEventListener('click', () => {
+                navLinks.classList.remove('active');
+                menuToggle.classList.remove('active');
+            });
+        });
+
+        // 4. Cerrar el menú si el usuario hace clic en cualquier parte fuera del menú
+        document.addEventListener('click', function(event) {
+            const isClickInsideMenu = navLinks.contains(event.target);
+            const isClickOnToggle = menuToggle.contains(event.target);
+
+            // Si el clic no fue en el menú ni en el botón, y el menú está abierto, lo cerramos
+            if (!isClickInsideMenu && !isClickOnToggle && navLinks.classList.contains('active')) {
+                navLinks.classList.remove('active');
+                menuToggle.classList.remove('active');
+            }
+        });
+        
+    } else {
+        console.warn("Aviso: No se encontró '.menu-toggle' o '.nav-links' en este archivo HTML.");
+    }
+});
+
+// 1. Lógica para desaparecer el Preloader correctamente
+window.addEventListener('load', function() {
+    const preloader = document.getElementById('preloader');
+    if (preloader) {
+        // Añade la clase que lo oculta visualmente
+        preloader.classList.add('preloader-oculto');
+        
+        // Lo removemos del DOM después de la animación para que no estorbe (medio segundo)
+        setTimeout(() => {
+            preloader.style.display = 'none';
+        }, 500);
+    }
+});
+
+// 2. Lógica del Menú Hamburguesa
+document.addEventListener('DOMContentLoaded', function() {
+    const menuToggle = document.getElementById('menu-toggle');
+    const navLinks = document.getElementById('nav-links');
+    
+    if (menuToggle && navLinks) {
+        
+        // Abrir/Cerrar menú
+        menuToggle.addEventListener('click', function(e) {
+            e.stopPropagation(); // Evita conflictos
+            navLinks.classList.toggle('active');
+        });
+
+        // Cerrar menú al hacer clic fuera de él
+        document.addEventListener('click', function(e) {
+            if (!navLinks.contains(e.target) && !menuToggle.contains(e.target)) {
+                navLinks.classList.remove('active');
+            }
+        });
+        
+        // Cerrar menú al tocar un enlace
+        const links = navLinks.querySelectorAll('a');
+        links.forEach(link => {
+            link.addEventListener('click', () => {
+                navLinks.classList.remove('active');
+            });
+        });
+        
+    }
+});

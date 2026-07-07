@@ -163,6 +163,7 @@
     padding: 10px;
     border: 1px solid #ddd;
     border-radius: 6px;
+    border-color: #94a3b8;
     font-size: 0.9rem;
     outline: none;
     transition: border-color 0.2s;
@@ -255,3 +256,57 @@
 .dato-etiqueta { font-size: 0.75rem; color: #94a3b8; text-transform: uppercase; letter-spacing: 0.5px; }
 .dato-valor { font-size: 1rem; color: #334155; font-weight: 500; }
 .resaltado { font-size: 1.3rem; color: #16a34a; font-weight: bold; }
+
+/* ==========================================
+   6. DISEÑO RESPONSIVO (Tablets y Móviles)
+   ========================================== */
+@media screen and (max-width: 768px) {
+    /* Ajustar el botón flotante para que no estorbe */
+    .btn-volver {
+        top: 15px;
+        left: 15px;
+        padding: 8px 15px;
+        font-size: 0.85rem;
+    }
+
+    /* Mover el panel de filtros a la parte inferior para dejar ver el mapa arriba */
+    .panel-filtros {
+        top: auto;
+        bottom: 20px;
+        left: 50%;
+        transform: translateX(-50%);
+        width: 90%;
+        max-width: 350px;
+        padding: 15px;
+        /* Si hay muchas opciones, permite scrollear sin tapar la pantalla */
+        max-height: 40vh; 
+        overflow-y: auto;
+        border-top: none;
+        border-bottom: 4px solid var(--primary); /* Cambia el borde de acento abajo */
+    }
+
+    .panel-filtros h3 {
+        font-size: 1rem;
+        margin-bottom: 15px;
+    }
+
+    .grupo-filtro {
+        margin-bottom: 10px;
+    }
+
+    .grupo-filtro input, 
+    .grupo-filtro select {
+        padding: 8px;
+    }
+
+    /* Modal: Pasar a 1 columna para que el texto no se colapse */
+    .modal-cuerpo {
+        grid-template-columns: 1fr;
+        gap: 10px;
+    }
+    
+    .modal-contenido {
+        width: 95%;
+        padding: 20px;
+    }
+}
