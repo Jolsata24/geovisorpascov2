@@ -224,3 +224,16 @@ window.addEventListener('load', () => {
         }, 300); // 300 milisegundos
     }
 });
+
+// js/menu.js
+document.addEventListener('DOMContentLoaded', () => {
+    const btnMenu = document.getElementById('btn-hamburguesa');
+    const menuNav = document.getElementById('menu-navegacion');
+
+    if (btnMenu && menuNav) {
+        btnMenu.addEventListener('click', () => {
+            // Alterna entre añadir y quitar la clase 'menu-activo'
+            menuNav.classList.toggle('menu-activo');
+        });
+    }
+});

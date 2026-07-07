@@ -1,26 +1,29 @@
-/* =======================================================
-   1. VARIABLES Y DISEÑO DEL SISTEMA (Design Tokens)
-======================================================= */
+/* ==========================================================================
+   1. VARIABLES GLOBALES (Paleta de colores y medidas)
+   ========================================================================== */
 :root {
-    --color-primario: #1e293b;    
-    --color-secundario: #3b82f6;  
-    --color-acento: #10b981;      
+    --color-primario: #0f172a;      /* Azul oscuro (Header/Footer) */
+    --color-secundario: #0284c7;    /* Azul claro (Botones, íconos) */
+    --color-acento: #10b981;        /* Verde (Éxito, Ejecución) */
+    --color-alerta: #f59e0b;        /* Naranja (Terminadas/Atención) */
     
-    --bg-body: #f8fafc;           
-    --bg-superficie: #ffffff;     
+    --fondo-body: #f1f5f9;          /* Gris muy claro para el fondo */
+    --fondo-tarjetas: #ffffff;      /* Blanco para las cards */
     
-    --texto-principal: #334155;   
-    --texto-claro: #f1f5f9;       
-    --texto-gris: #64748b;
+    --texto-principal: #334155;     /* Gris oscuro para texto general */
+    --texto-secundario: #64748b;    /* Gris medio para subtítulos */
+    --texto-gris: #94a3b8;
     
-    --sombra-suave: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+    --borde-color: #e2e8f0;
+    --radius-card: 12px;
+    --sombra-card: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
     --sombra-hover: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
     --transicion: all 0.3s ease;
-    --radius-card: 12px;
-    
-    --fuente-base: 'Inter', system-ui, -apple-system, sans-serif;
 }
 
+/* ==========================================================================
+   2. RESET Y ESTILOS BASE
+   ========================================================================== */
 * {
     margin: 0;
     padding: 0;
@@ -28,378 +31,520 @@
 }
 
 body {
-    font-family: var(--fuente-base);
-    background-color: var(--bg-body);
+    font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+    background-color: var(--fondo-body);
     color: var(--texto-principal);
     line-height: 1.6;
 }
 
-a {
-    text-decoration: none;
-    color: inherit;
-}
-/* =======================================================
-   PANTALLA DE CARGA (PRELOADER)
-======================================================= */
+/* ==========================================================================
+   3. PRELOADER
+   ========================================================================== */
 #preloader {
     position: fixed;
     top: 0;
     left: 0;
-    width: 100vw;
-    height: 100dvh; /* 'dvh' evita problemas con las barras de Safari/Chrome móvil */
-    background-color: var(--color-primario);
+    width: 100%;
+    height: 100%;
+    background-color: var(--fondo-tarjetas);
     z-index: 9999;
     display: flex;
     justify-content: center;
     align-items: center;
-    transition: opacity 0.5s ease, visibility 0.5s ease;
+    transition: opacity 0.5s ease;
+}
+
+.preloader-content {
+    text-align: center;
 }
 
 .preloader-logo {
-    /* Hacemos que el logo sea responsivo */
-    width: 60vw; 
-    max-width: 120px; 
-    height: auto;
-    animation: latido 1.5s infinite alternate ease-in-out;
+    width: 120px;
+    margin-bottom: 20px;
 }
 
-.preloader-oculto {
-    opacity: 0;
-    visibility: hidden;
-    pointer-events: none;
-}
-
-/* El círculo que gira */
 .spinner {
     width: 40px;
     height: 40px;
-    border: 3px solid rgba(255, 255, 255, 0.1); /* Borde transparente */
-    border-top-color: var(--color-secundario); /* Borde azul brillante que gira */
+    border: 4px solid var(--borde-color);
+    border-top: 4px solid var(--color-secundario);
     border-radius: 50%;
     animation: girar 1s linear infinite;
-}
-
-/* Clase que aplicará JavaScript para ocultarlo con un desvanecimiento (Fade-out) */
-.preloader-oculto {
-    opacity: 0;
-    visibility: hidden;
-}
-
-/* Keyframes de las animaciones */
-@keyframes latido {
-    0% { transform: scale(0.95); opacity: 0.8; }
-    100% { transform: scale(1.05); opacity: 1; }
+    margin: 0 auto;
 }
 
 @keyframes girar {
-    to { transform: rotate(360deg); }
-}
-/* =======================================================
-   2. HEADER Y NAVEGACIÓN
-======================================================= */
-/* Agrega esto para controlar el tamaño de tu nuevo logo */
-.navbar .logo {
-    display: flex;
-    align-items: center;
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
 }
 
-.logo-img {
-    height: 45px; /* Ajusta este número si lo quieres más grande o más pequeño */
-    width: auto;  /* Esto mantiene las proporciones correctas */
-    transition: transform 0.3s ease;
-}
-
-/* Opcional: Un pequeño efecto cuando pasen el mouse sobre el logo */
-.logo-img:hover {
-    transform: scale(1.05);
-}
-
-.header-global { display: flex; flex-direction: column; }
-
-.navbar {
+/* ==========================================================================
+   4. HEADER Y BANNER HERO
+   ========================================================================== */
+.header-global {
     background-color: var(--color-primario);
-    padding: 1rem 5%;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    position: sticky;
-    top: 0;
-    z-index: 1000;
-    box-shadow: var(--sombra-suave);
+    color: white;
 }
 
 .navbar-brand .logo {
-    color: var(--texto-claro);
+    display: flex;
+    align-items: center;
+    color: white;
     font-size: 1.5rem;
-    font-weight: 700;
+    font-weight: bold;
 }
 
-.navbar-brand .logo span { color: var(--color-secundario); }
-
-.nav-links { display: flex; gap: 2rem; list-style: none; }
-
-.nav-item {
-    color: var(--texto-claro);
-    font-weight: 500;
-    font-size: 0.95rem;
-    padding: 0.5rem 0;
-    position: relative;
-    transition: var(--transicion);
+.logo-img {
+    width: 40px;
+    margin-right: 10px;
 }
 
-.nav-item::after {
-    content: '';
-    position: absolute;
-    bottom: 0; left: 0;
-    width: 0%; height: 2px;
-    background-color: var(--color-secundario);
-    transition: var(--transicion);
-}
-
-.nav-item:hover::after { width: 100%; }
-.nav-item:hover { color: var(--bg-superficie); }
-
-.menu-toggle {
-    display: none; background: none; border: none; cursor: pointer; flex-direction: column; gap: 5px;
-}
-.menu-toggle .bar { width: 25px; height: 3px; background-color: var(--texto-claro); border-radius: 3px; }
-
-/* BANNER */
 .banner-hero {
-    position: relative; height: 180px; display: flex; align-items: center; justify-content: center; overflow: hidden;
+    position: relative;
+    height: 250px;
+    overflow: hidden;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
 }
-.banner-bg { position: absolute; width: 100%; height: 100%; object-fit: cover; z-index: 1; }
-.banner-overlay {
-    position: absolute; width: 100%; height: 100%;
-    background: linear-gradient(to right, rgba(30, 41, 59, 0.85), rgba(30, 41, 59, 0.4)); z-index: 2;
-}
-.banner-content { position: relative; z-index: 3; text-align: center; color: var(--texto-claro); }
-.banner-content h1 { font-size: 2rem; font-weight: 800; margin-bottom: 0.2rem; }
-.banner-content p { font-size: 1rem; opacity: 0.9; }
 
-/* =======================================================
-   3. DASHBOARD MAIN CONTAINER
-======================================================= */
+.banner-bg {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    z-index: 1;
+}
+
+.banner-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(15, 23, 42, 0.7); /* Capa oscura para resaltar el texto */
+    z-index: 2;
+}
+
+.banner-content {
+    position: relative;
+    z-index: 3;
+    color: white;
+    padding: 0 20px;
+}
+
+.banner-content h1 {
+    font-size: 2.5rem;
+    margin-bottom: 10px;
+}
+
+.banner-content p {
+    font-size: 1.2rem;
+    color: #cbd5e1;
+}
+
+/* ==========================================================================
+   5. LAYOUT PRINCIPAL (Dashboard)
+   ========================================================================== */
 .dashboard-container {
     max-width: 1200px;
-    margin: 2rem auto;
+    margin: -30px auto 40px auto; /* Sube un poco sobre el banner */
     padding: 0 20px;
-    display: flex;
-    flex-direction: column;
-    gap: 1.5rem;
+    position: relative;
+    z-index: 10;
 }
 
-/* =======================================================
-   4. SECCIÓN DE FILTROS Y NAVEGACIÓN (Tarjetas top)
-======================================================= */
-/* Filtro */
+/* Contenedor del Filtro Principal */
 .filtro-dashboard-card {
-    background-color: var(--bg-superficie);
-    padding: 1.5rem;
+    background-color: var(--fondo-tarjetas);
     border-radius: var(--radius-card);
-    box-shadow: var(--sombra-suave);
+    padding: 20px 25px;
+    box-shadow: var(--sombra-card);
     display: flex;
     justify-content: space-between;
     align-items: center;
-    border: 1px solid #e2e8f0;
-}
-.filtro-dashboard-text h2 { font-size: 1.2rem; color: var(--color-primario); margin-bottom: 5px; }
-.filtro-dashboard-text p { color: var(--texto-gris); font-size: 0.9rem; }
-.filtro-dashboard-select {
-    padding: 0.6rem 1rem;
-    border-radius: 8px;
-    border: 1px solid #cbd5e1;
-    font-size: 1rem;
-    outline: none;
-    cursor: pointer;
-    background-color: var(--bg-body);
+    margin-bottom: 25px;
 }
 
-/* Tarjetas de Navegación */
+.filtro-dashboard-text h2 {
+    font-size: 1.2rem;
+    color: var(--color-primario);
+    margin-bottom: 5px;
+}
+
+.filtro-dashboard-text p {
+    color: var(--texto-secundario);
+    font-size: 0.9rem;
+}
+
+.filtro-dashboard-select {
+    padding: 10px 15px;
+    border: 1px solid var(--borde-color);
+    border-radius: 6px;
+    font-size: 1rem;
+    color: var(--texto-principal);
+    outline: none;
+    cursor: pointer;
+}
+
+/* ==========================================================================
+   6. TARJETAS DE NAVEGACIÓN Y KPIS
+   ========================================================================== */
 .nav-cards {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-    gap: 1.5rem;
+    gap: 20px;
+    margin-bottom: 30px;
 }
+
 .nav-card {
-    background: var(--bg-superficie);
+    background-color: var(--fondo-tarjetas);
     border-radius: var(--radius-card);
-    padding: 1.5rem;
+    padding: 20px;
     display: flex;
     align-items: center;
-    box-shadow: var(--sombra-suave);
-    border: 1px solid #e2e8f0;
+    text-decoration: none;
+    color: var(--texto-principal);
+    box-shadow: var(--sombra-card);
     transition: var(--transicion);
 }
+
 .nav-card:hover {
-    transform: translateY(-3px);
+    transform: translateY(-5px);
     box-shadow: var(--sombra-hover);
-    border-color: var(--color-secundario);
 }
-.nav-card-text { flex-grow: 1; }
-.nav-card-text h3 { font-size: 1.1rem; color: var(--color-primario); }
-.nav-card-text p { font-size: 0.85rem; color: var(--texto-gris); margin-top: 3px; }
-.nav-card .arrow { color: #cbd5e1; font-size: 1.2rem; }
 
-/* Cajas de Iconos */
 .icon-box {
-    width: 50px; height: 50px;
-    border-radius: 12px;
-    display: flex; align-items: center; justify-content: center;
-    font-size: 1.4rem; color: white;
-    margin-right: 1rem;
+    width: 50px;
+    height: 50px;
+    border-radius: 10px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 1.5rem;
+    color: white;
+    margin-right: 15px;
 }
 
-/* =======================================================
-   5. TARJETAS KPI (Métricas numéricas)
-======================================================= */
+.nav-card-text h3 { margin-bottom: 5px; }
+.nav-card-text p { color: var(--texto-secundario); font-size: 0.9rem; }
+.nav-card .arrow { margin-left: auto; color: var(--borde-color); transition: var(--transicion); }
+.nav-card:hover .arrow { color: var(--color-secundario); transform: translateX(5px); }
+
+/* Grid de KPIs */
 .kpi-grid {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-    gap: 1.5rem;
+    gap: 20px;
+    margin-bottom: 30px;
 }
+
 .kpi-card {
-    background-color: var(--bg-superficie);
-    padding: 1.5rem;
+    background-color: var(--fondo-tarjetas);
     border-radius: var(--radius-card);
-    box-shadow: var(--sombra-suave);
-    border: 1px solid #e2e8f0;
+    padding: 20px;
+    box-shadow: var(--sombra-card);
+    text-align: center;
 }
+
 .kpi-header {
     display: flex;
     justify-content: space-between;
     align-items: center;
     font-size: 0.85rem;
-    font-weight: 700;
-    color: var(--texto-gris);
-    margin-bottom: 0.8rem;
+    font-weight: 600;
+    color: var(--texto-secundario);
+    margin-bottom: 15px;
 }
-.kpi-card h2 { font-size: 2.5rem; font-weight: 800; color: var(--color-primario); line-height: 1; margin-bottom: 0.5rem; }
 
-/* =======================================================
-   6. GRID PRINCIPAL (Mapa y Widgets Laterales)
-======================================================= */
+.kpi-card h2 {
+    font-size: 2.5rem;
+    margin-bottom: 5px;
+    color: var(--texto-principal);
+}
+
+/* ==========================================================================
+   7. MAIN GRID (Mapa y Widgets)
+   ========================================================================== */
 .main-grid {
     display: grid;
-    grid-template-columns: 2fr 1fr; /* El mapa ocupa el doble que los widgets */
-    gap: 1.5rem;
-    margin-bottom: 2rem;
+    grid-template-columns: 2fr 1fr;
+    gap: 20px;
 }
 
 .card {
-    background-color: var(--bg-superficie);
+    background-color: var(--fondo-tarjetas);
     border-radius: var(--radius-card);
-    box-shadow: var(--sombra-suave);
-    border: 1px solid #e2e8f0;
-    padding: 1.5rem;
-    margin-bottom: 1.5rem;
+    padding: 20px;
+    box-shadow: var(--sombra-card);
 }
-.card-header h3 { font-size: 1.1rem; color: var(--color-primario); border-bottom: 1px solid #e2e8f0; padding-bottom: 10px; margin-bottom: 15px; }
 
-/* Mapa */
+.card-header {
+    margin-bottom: 15px;
+    border-bottom: 1px solid var(--borde-color);
+    padding-bottom: 10px;
+}
+
+.card-header h3 {
+    font-size: 1.1rem;
+    color: var(--texto-principal);
+}
+
+/* Contenedor del Mapa en el Dashboard */
 .map-container {
-    height: 450px;
+    height: 400px;
     width: 100%;
-    background-color: #e2e8f0; /* Color temporal mientras carga Leaflet */
-    z-index: 1; /* Para evitar problemas de superposición con el navbar */
+    background-color: #e5e7eb; /* Placeholder mientras carga Leaflet */
 }
 
-/* Barras de Progreso (Provincias) */
-.progress-bar { margin-bottom: 1.2rem; }
-.progress-label { display: flex; justify-content: space-between; font-size: 0.9rem; font-weight: 600; color: var(--texto-principal); margin-bottom: 5px; }
-.track { background-color: #f1f5f9; height: 8px; border-radius: 4px; overflow: hidden; }
-.fill { height: 100%; border-radius: 4px; transition: width 0.8s ease; }
-
-/* Gráfico de dona */
-.chart-container { position: relative; height: 220px; width: 100%; display: flex; justify-content: center;}
-
-/* =======================================================
-   7. MODAL (Detalle de Obra)
-======================================================= */
-.modal-overlay {
-    display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-    background-color: rgba(15, 23, 42, 0.6); backdrop-filter: blur(4px);
-    z-index: 2000; justify-content: center; align-items: center;
+/* ==========================================================================
+   8. BARRAS DE PROGRESO (Progress Bars)
+   ========================================================================== */
+.progress-bar {
+    margin-bottom: 15px;
 }
-.modal-contenido {
-    background-color: var(--bg-superficie);
-    width: 90%; max-width: 450px;
-    border-radius: var(--radius-card);
-    padding: 2rem; position: relative;
-    box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1);
-}
-.modal-cerrar {
-    position: absolute; top: 15px; right: 20px;
-    font-size: 1.8rem; cursor: pointer; color: var(--texto-gris); transition: var(--transicion);
-}
-.modal-cerrar:hover { color: #ef4444; }
-.modal-cabecera { margin-bottom: 1.5rem; }
-.etiqueta-estado { display: inline-block; padding: 4px 10px; border-radius: 20px; font-size: 0.8rem; font-weight: 600; background: #e0e7ff; color: #4338ca; margin-bottom: 10px; }
-.texto-principal { font-size: 1.3rem; color: var(--color-primario); margin-bottom: 5px; line-height: 1.3; }
-.texto-secundario { font-size: 0.9rem; color: var(--texto-gris); }
-.modal-cuerpo { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
-.dato-bloque { background-color: var(--bg-body); padding: 12px; border-radius: 8px; display: flex; flex-direction: column; }
-.dato-etiqueta { font-size: 0.8rem; color: var(--texto-gris); margin-bottom: 4px; }
-.dato-valor { font-size: 1rem; font-weight: 700; color: var(--color-primario); }
-.btn-primary { display: block; text-align: center; background-color: var(--color-secundario); color: white; padding: 12px; border-radius: 8px; font-weight: 600; transition: var(--transicion); border: none; cursor: pointer; }
-.btn-primary:hover { background-color: #2563eb; }
 
-/* =======================================================
-   8. CLASES UTILITARIAS DE COLORES
-======================================================= */
-.bg-blue { background-color: #3b82f6; }
-.bg-teal { background-color: #14b8a6; }
+.progress-label {
+    display: flex;
+    justify-content: space-between;
+    font-size: 0.9rem;
+    font-weight: 500;
+    margin-bottom: 5px;
+    color: var(--texto-principal);
+}
+
+.track {
+    width: 100%;
+    height: 8px;
+    background-color: var(--borde-color);
+    border-radius: 4px;
+    overflow: hidden;
+}
+
+.fill {
+    height: 100%;
+    border-radius: 4px;
+    width: 0; /* Se llena con JS o estilos en línea */
+}
+
+/* ==========================================================================
+   9. COLORES UTILITARIOS
+   ========================================================================== */
+.bg-blue { background-color: var(--color-secundario); }
+.bg-teal { background-color: var(--color-acento); }
 .bg-purple { background-color: #8b5cf6; }
-.bg-yellow { background-color: #f59e0b; }
-.text-green { color: #10b981 !important; }
+.bg-yellow { background-color: var(--color-alerta); }
+.text-green { color: var(--color-acento) !important; }
 
-/* =======================================================
-   9. DISEÑO RESPONSIVO (Tablets y Móviles)
-======================================================= */
-@media screen and (max-width: 992px) {
-    .main-grid { 
-        grid-template-columns: 1fr; /* El mapa y widgets se apilan */
+/* Botones */
+.btn-primary {
+    background-color: var(--color-secundario);
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 6px;
+    cursor: pointer;
+    font-weight: 600;
+    transition: var(--transicion);
+    display: inline-block;
+    text-align: center;
+    text-decoration: none;
+}
+
+.btn-primary:hover {
+    background-color: #0369a1; /* Azul más oscuro */
+}
+
+/* ==========================================================================
+   10. MODALES (Estructura y Textos Visibles)
+   ========================================================================== */
+.modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(15, 23, 42, 0.8);
+    display: none; /* Cambiar a 'flex' con JS */
+    justify-content: center;
+    align-items: center;
+    z-index: 3000;
+}
+
+.modal-contenido {
+    background-color: var(--fondo-tarjetas);
+    border-radius: var(--radius-card);
+    width: 90%;
+    max-width: 500px;
+    padding: 25px;
+    position: relative;
+    box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1);
+    animation: modalSlideIn 0.3s ease-out forwards;
+}
+
+@keyframes modalSlideIn {
+    from { opacity: 0; transform: translateY(-20px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+/* Botón de cerrar bien definido */
+.modal-cerrar {
+    position: absolute;
+    top: 15px;
+    right: 20px;
+    font-size: 28px;
+    color: var(--texto-secundario);
+    cursor: pointer;
+    font-weight: bold;
+    transition: color 0.2s;
+    line-height: 1;
+}
+
+.modal-cerrar:hover {
+    color: #ef4444; /* Rojo al pasar el mouse para indicar cierre */
+}
+
+.texto-principal {
+    color: var(--color-primario);
+    font-size: 1.4rem;
+    margin-bottom: 8px;
+}
+
+.texto-secundario {
+    color: var(--texto-secundario);
+    font-size: 0.95rem;
+}
+
+.modal-cuerpo {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 15px;
+    margin-top: 20px;
+}
+
+.dato-bloque {
+    background-color: var(--fondo-body);
+    padding: 12px;
+    border-radius: 8px;
+    display: flex;
+    flex-direction: column;
+}
+
+.dato-etiqueta {
+    font-size: 0.8rem;
+    color: var(--texto-secundario);
+    text-transform: uppercase;
+    margin-bottom: 4px;
+    font-weight: 600;
+}
+
+.dato-valor {
+    color: var(--texto-principal);
+    font-weight: bold;
+    font-size: 1.1rem;
+}
+
+/* ==========================================================================
+   11. RESPONSIVIDAD (Móviles y Tablets)
+   ========================================================================== */
+@media (max-width: 992px) {
+    .main-grid {
+        grid-template-columns: 1fr; /* Apila el mapa y los gráficos */
     }
-    .banner-content h1 {
-        font-size: 1.75rem;
+    
+    .filtro-dashboard-card {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 15px;
+    }
+    
+    .filtro-dashboard-select {
+        width: 100%;
     }
 }
 
-@media screen and (max-width: 768px) {
-    .menu-toggle { display: flex; }
-    
-    .nav-links {
-        position: absolute; top: 100%; right: -100%; width: 250px; height: 100vh;
-        background-color: var(--color-primario); flex-direction: column; align-items: center;
-        padding-top: 2rem; transition: right 0.4s ease; box-shadow: -5px 0 15px rgba(0,0,0,0.1); gap: 1rem;
+@media (max-width: 768px) {
+    .banner-content h1 { font-size: 1.8rem; }
+    .kpi-grid, .nav-cards { grid-template-columns: 1fr; }
+    .modal-cuerpo { grid-template-columns: 1fr; }
+}
+
+/* ==========================================================================
+   12. BARRA DE NAVEGACIÓN Y CONTROL RESPONSIVO (CORRECCIÓN)
+   ========================================================================== */
+
+/* Contenedor principal de la barra */
+.navbar {
+    display: flex !important;
+    justify-content: space-between !important;
+    align-items: center !important;
+    padding: 15px 40px;
+    background-color: var(--color-primario);
+    width: 100%;
+    box-sizing: border-box;
+    position: relative;
+    z-index: 100;
+    display: flex;
+    align-items: center;
+}
+
+/* Forzamos que los enlaces sean horizontales y blancos */
+.nav-links-desktop {
+    display: flex !important;
+    flex-direction: row !important;
+    list-style: none !important;
+    gap: 30px;
+    margin: 0;
+    padding: 0;
+}
+
+.nav-links-desktop li a {
+    color: white !important;
+    text-decoration: none !important;
+    font-size: 1.05rem;
+    font-weight: 500;
+    transition: color 0.3s ease;
+}
+
+.nav-links-desktop li a:hover {
+    color: var(--color-secundario) !important;
+}
+
+/* =========================================
+   MEDIA QUERIES (El cerebro responsivo)
+   ========================================= */
+
+/* MONITOR (Pantallas de computadora) */
+@media (min-width: 993px) {
+    /* Escondemos el menú de celular */
+    .btn-hamburguesa { 
+        display: none !important; 
     }
-    
-    .nav-links.active { right: 0; }
-    
-    .filtro-dashboard-card { 
-        flex-direction: column; align-items: stretch; gap: 15px; text-align: center; 
+    .menu-lateral { 
+        display: none !important; 
     }
-    
-    .nav-cards { grid-template-columns: 1fr; }
-    
-    .kpi-card h2 {
-        font-size: 2rem; /* Reduce un poco el tamaño del número en móviles */
-    }
-    
-    /* Pasa el modal a 1 columna en móviles */
-    .modal-cuerpo {
-        grid-template-columns: 1fr;
+    /* Mostramos los enlaces horizontales */
+    .nav-links-desktop { 
+        display: flex !important; 
     }
 }
 
-@media screen and (max-width: 480px) {
-    .banner-content h1 {
-        font-size: 1.4rem;
+/* CELULAR Y TABLET (Pantallas pequeñas) */
+@media (max-width: 992px) {
+    /* Escondemos los enlaces horizontales */
+    .nav-links-desktop { 
+        display: none !important; 
     }
-    .banner-content p {
-        font-size: 0.9rem;
+    /* Mostramos el botón hamburguesa */
+    .btn-hamburguesa { 
+        display: flex !important; 
     }
-    .modal-contenido {
-        padding: 1.5rem; /* Menos padding lateral para ganar espacio */
+    /* Centramos un poco el logo para que no choque con el botón */
+    .navbar-brand { 
+        padding: 0 !important;
+    margin: 0 !important;
     }
 }

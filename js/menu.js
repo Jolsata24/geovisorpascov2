@@ -327,33 +327,17 @@ window.addEventListener('load', function() {
     }
 });
 
-// 2. Lógica del Menú Hamburguesa
-document.addEventListener('DOMContentLoaded', function() {
-    const menuToggle = document.getElementById('menu-toggle');
-    const navLinks = document.getElementById('nav-links');
-    
-    if (menuToggle && navLinks) {
-        
-        // Abrir/Cerrar menú
-        menuToggle.addEventListener('click', function(e) {
-            e.stopPropagation(); // Evita conflictos
-            navLinks.classList.toggle('active');
-        });
+// Espera a que el HTML termine de cargar
+document.addEventListener('DOMContentLoaded', () => {
+    // Seleccionamos los elementos por su ID
+    const btnMenu = document.getElementById('btn-menu');
+    const menuLateral = document.getElementById('menu-lateral');
 
-        // Cerrar menú al hacer clic fuera de él
-        document.addEventListener('click', function(e) {
-            if (!navLinks.contains(e.target) && !menuToggle.contains(e.target)) {
-                navLinks.classList.remove('active');
-            }
+    // Comprobamos que los elementos existan en la página actual
+    if (btnMenu && menuLateral) {
+        btnMenu.addEventListener('click', () => {
+            // Alterna la clase 'activo' en el menú (lo muestra u oculta)
+            menuLateral.classList.toggle('activo');
         });
-        
-        // Cerrar menú al tocar un enlace
-        const links = navLinks.querySelectorAll('a');
-        links.forEach(link => {
-            link.addEventListener('click', () => {
-                navLinks.classList.remove('active');
-            });
-        });
-        
     }
 });

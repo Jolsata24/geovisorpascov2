@@ -5,56 +5,82 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Dashboard - Pasco Transparente</title>
     
+    <!-- Librerías Externas -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
     <link rel="stylesheet" href="https://unpkg.com/leaflet.markercluster@1.5.3/dist/MarkerCluster.css" />
     <link rel="stylesheet" href="https://unpkg.com/leaflet.markercluster@1.5.3/dist/MarkerCluster.Default.css" />
     <link rel="icon" type="image/png" href="img/logo02.png">
 
+    <!-- Tus Estilos -->
     <link rel="stylesheet" href="styles/estilos_main.css">
+    <link rel="stylesheet" href="styles/menu.css"> <!-- El CSS del menú está correctamente en el head -->
 </head>
 <body>
+    <!-- Preloader -->
     <div id="preloader">
         <div class="preloader-content">
             <img src="img/logo02.png" alt="Cargando Pasco Transparente" class="preloader-logo">
             <div class="spinner"></div>
         </div>
     </div>
-    <header class="header-global">
-    <!-- Barra de Navegación -->
-    <nav class="navbar">
-        <div class="navbar-brand">
-            <a href="index.html" class="logo" style="text-decoration:none;">
-    <img src="img/logo02.png" alt="Logo Pasco Transparente" class="logo-img">GeoVisor Pasco
-</a>
-        </div>
-        
-        <button class="menu-toggle" id="menu-toggle" aria-label="Abrir menú">
-            <span class="bar"></span>
-            <span class="bar"></span>
-            <span class="bar"></span>
-        </button>
 
-        <ul class="nav-links" id="nav-links">
-            <li><a href="index.html" class="nav-item">Inicio</a></li>
-            <li><a href="mapa.html" class="nav-item">Mapa Interactivo</a></li>
-            <li><a href="explorar.html" class="nav-item">Explorar Obras</a></li>
+    <!-- Botón del menú hamburguesa -->
+    <button id="btn-menu" class="btn-hamburguesa">
+        <span class="linea"></span>
+        <span class="linea"></span>
+        <span class="linea"></span>
+    </button>
+
+    <!-- El menú lateral sigue estando fuera (eso es correcto) -->
+    <nav id="menu-lateral" class="menu-lateral">
+        <ul class="lista-menu">
+            <li><a href="index.html">Inicio</a></li>
+            <li><a href="mapa.html">Mapa</a></li>
+            <li><a href="explorar.html">Explorar</a></li>
         </ul>
     </nav>
 
-    <!-- Banner Global con la imagen -->
-    <div class="banner-hero">
-        <img src="img/banner.jpg" alt="Banner del proyecto" class="banner-bg">
-        <div class="banner-overlay"></div>
-        <div class="banner-content">
-            <h1 id="banner-title">Sistema de Información Geográfica</h1>
-            <p id="banner-subtitle">Monitoreo y consulta de obras</p>
+    <header class="header-global">
+        <!-- Barra de Navegación -->
+        <nav class="navbar">
+            
+            <!-- Grupo Izquierdo: Botón Hamburguesa + Logo -->
+            <div class="navbar-left">
+                <button id="btn-menu" class="btn-hamburguesa">
+                    <span class="linea"></span>
+                    <span class="linea"></span>
+                    <span class="linea"></span>
+                </button>
+                
+                <div class="navbar-brand">
+                    <a href="index.html" class="logo" style="text-decoration:none;">
+                        <img src="img/logo02.png" alt="Logo Pasco Transparente" class="logo-img">GeoVisor Pasco
+                    </a>
+                </div>
+            </div>
+            
+            <!-- Grupo Derecho: ENLACES HORIZONTALES (PC) -->
+            <ul class="nav-links-desktop">
+                <li><a href="index.html">Inicio</a></li>
+                <li><a href="mapa.html">Mapa Interactivo</a></li>
+                <li><a href="explorar.html">Explorar Obras</a></li>
+            </ul>
+        </nav>
+        
+        <!-- Banner Global con la imagen -->
+        <div class="banner-hero">
+            <img src="img/banner.jpg" alt="Banner del proyecto" class="banner-bg">
+            <div class="banner-overlay"></div>
+            <div class="banner-content">
+                <h1 id="banner-title">Sistema de Información Geográfica</h1>
+                <p id="banner-subtitle">Monitoreo y consulta de obras</p>
+            </div>
         </div>
-    </div>
-</header>
+    </header>
 
     <main class="dashboard-container">
-
+        <!-- Filtros -->
         <div class="filtro-dashboard-card">
             <div class="filtro-dashboard-text">
                 <h2><i class="fa-solid fa-calendar-days"></i> Periodo de Ejecución</h2>
@@ -70,6 +96,7 @@
             </select>
         </div>
 
+        <!-- Tarjetas de Navegación -->
         <div class="nav-cards">
             <a href="mapa.html" class="nav-card">
                 <div class="icon-box bg-blue"><i class="fa-solid fa-map-location-dot"></i></div>
@@ -89,6 +116,7 @@
             </a>
         </div>
 
+        <!-- KPI Grid -->
         <div class="kpi-grid">
             <div class="kpi-card">
                 <div class="kpi-header"><span>TOTAL DE OBRAS</span> <i class="fa-solid fa-folder-open icon-blue" style="color: #0284c7;"></i></div>
@@ -107,8 +135,8 @@
             </div>
         </div>
 
+        <!-- Main Grid -->
         <div class="main-grid">
-            
             <div class="card" style="padding: 0; overflow: hidden; display: flex; flex-direction: column;">
                 <div class="card-header" style="padding: 20px 24px 0 24px; border-bottom: none;">
                     <h3><i class="fa-solid fa-location-dot" style="margin-right: 8px;"></i> Distribución Geográfica</h3>
@@ -117,7 +145,6 @@
             </div>
 
             <div class="side-widgets">
-                
                 <div class="card">
                     <div class="card-header">
                         <h3><i class="fa-solid fa-chart-bar" style="margin-right: 8px;"></i> Obras por Provincia</h3>
@@ -138,12 +165,11 @@
                         <div class="track"><div id="bar-oxa" class="fill bg-yellow"></div></div>
                     </div>
                 </div>
-
-
             </div>
         </div>
     </main>
 
+    <!-- ================= MODAL DE OBRAS ================= -->
     <div id="modalObras" class="modal-overlay">
         <div class="modal-contenido">
             <span class="modal-cerrar">&times;</span>
@@ -172,18 +198,8 @@
         </div>
     </div>
 
-    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
-    <script src="https://unpkg.com/leaflet.markercluster@1.5.3/dist/leaflet.markercluster.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-    
-    <script src="js/menu.js?v=2"></script>
-    <!-- Todo el contenido de tu página arriba -->
-    
-    <script src="js/menu.js"></script>
-</body>
-</html>
-
     <!-- ================= MODAL INFORMATIVO DE BIENVENIDA ================= -->
+    <!-- Movidi aquí, DENTRO del body -->
     <div id="modalBienvenida" class="modal-overlay">
         <div class="modal-contenido" style="max-width: 420px; text-align: center;">
             <span class="modal-cerrar" id="cerrarBienvenida">&times;</span>
@@ -206,6 +222,14 @@
             </div>
         </div>
     </div>
-    <!-- =================================================================== -->
+
+    <!-- Scripts al final del body -->
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+    <script src="https://unpkg.com/leaflet.markercluster@1.5.3/dist/leaflet.markercluster.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    
+    <!-- Solo una llamada a tu script del menú -->
+    <script src="js/menu.js"></script>
+    
 </body>
 </html>
